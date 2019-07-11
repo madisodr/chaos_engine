@@ -7,11 +7,11 @@
 
 const uint8_t kMatrixWidth  = 10;
 const uint8_t kMatrixHeight = 11;
-
 #define NUM_LEDS (kMatrixWidth * kMatrixHeight)
+#define MAX_DIMENSION ((kMatrixWidth > kMatrixHeight) ? kMatrixWidth : kMatrixHeight)
+
 #define REAL_NUM_LEDS 106
 #define STRIP_LENGTH (REAL_NUM_LEDS / 2)
-#define MAX_DIMENSION ((kMatrixWidth > kMatrixHeight) ? kMatrixWidth : kMatrixHeight)
 
 #define MAX_BRIGHTNESS 150
 
@@ -35,24 +35,24 @@ const int LEFT_MID = LEFT_TOP / 2 + (LEFT_TOP - STRIP_LENGTH);
 
 // ID's for each palette in our program
 enum Palette_Ids {
-  MIX,
-  ORG
+    MIX,
+    ORG
 };
 
 extern const TProgmemPalette16 orangePalette PROGMEM =
 {
-  P_ORG, CRGB::Black, CRGB::Black, CRGB::Black,
-  P_ORG, CRGB::Black, CRGB::Black, CRGB::Black,
-  CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black,
-  CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black
+    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black,
+    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black,
+    CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black,
+    CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black
 };
 
 extern const TProgmemPalette16 mixedPalette PROGMEM =
 {
-  P_ORG, CRGB::Black, CRGB::Black, CRGB::Black, 
-  P_TRL, CRGB::Black, CRGB::Black, CRGB::Black,
-  P_TRL, CRGB::Black, CRGB::Black, CRGB::Black,
-  P_ORG, CRGB::Black, CRGB::Black, CRGB::Black
+    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black, 
+    P_TRL, CRGB::Black, CRGB::Black, CRGB::Black,
+    P_TRL, CRGB::Black, CRGB::Black, CRGB::Black,
+    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black
 };
 
 #endif // CONFIG_H
