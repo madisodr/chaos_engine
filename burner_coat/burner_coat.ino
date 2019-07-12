@@ -6,30 +6,27 @@
 
 #include "breathing_rainbow.h"
 
-//#include "confetti.h"
+#include "confetti.h"
 #include "double_marqee.h"
 // #include "juggle.h"
 //#include "noise.h"
 #include "ripple.h"
-#include "shimmer.h"
+// #include "shimmer.h"
 
 uint8_t current_pattern = 0; // Index number of which pattern is current
 CRGBPalette16 current_palette(orangePalette);
 CRGBPalette16 target_palette;
 
-BreathingRainbow* breathing = new BreathingRainbow(5);
-Shimmer* shimmer = new Shimmer(5);
-Ripple* ripple = new Ripple(5);
-DoubleMarqee* rainbow_marqee = new DoubleMarqee(5, true);
-DoubleMarqee* orange_marqee = new DoubleMarqee(5, false);
-    
-Pattern* p_list[] = { breathing, rainbow_marqee, orange_marqee};
+BreathingRainbow* breathing = new BreathingRainbow(10);
+//Shimmer* shimmer = new Shimmer(5);
+Ripple* ripple = new Ripple(10);
+DoubleMarqee* rainbow_marqee = new DoubleMarqee(10);
+
+Pattern* p_list[] = {rainbow_marqee, ripple};
 Playlist* playlist = new Playlist(p_list, ARRAY_SIZE(p_list));
 /* setup */
 void setup() {
     LEDS.addLeds<WS2811, LED_PIN, GRB>(leds, NUM_LEDS);
-
-
 
     randomSeed(analogRead(A1));
     // Initialize our coordinates to some random values
@@ -49,13 +46,11 @@ void loop() {
     // Fetch current pattern
     Pattern* running_pattern = (Pattern*)playlist->Current();
     running_pattern->Run();
-    
+
 
     EVERY_N_SECONDS_I(timer, running_pattern->m_time) {
         playlist->Seek();
 
-        fadeToBlackBy(leds, NUM_LEDS, 30);
-        
         // Update timer period to new pattern's length
         timer.setPeriod(playlist->Current()->m_time);
     }

@@ -20,6 +20,7 @@ class Playlist
         uint8_t m_index;
         bool m_paused;
         uint8_t m_pattern_count;
+        bool m_blend_patterns;
 };
 
 Playlist::Playlist(Pattern** _list, uint8_t _pattern_count)
@@ -28,18 +29,15 @@ Playlist::Playlist(Pattern** _list, uint8_t _pattern_count)
     m_index = 0;
     m_paused = false;
     m_pattern_count = _pattern_count;
-}
-
-void Playlist::SetPattern(Pattern* br) {
-  m_list[0] = br;
+    m_blend_patterns = false;
 }
 
 // returns currently playing pattern
 Pattern* Playlist::Current() {
-    if(m_index < 0 || m_index > m_pattern_count)
-      return m_list[0];
-    else 
-      return m_list[m_index];
+    if (m_index < 0 || m_index > m_pattern_count)
+        return m_list[0];
+    else
+        return m_list[m_index];
 }
 
 void Playlist::Restart() {
@@ -47,14 +45,19 @@ void Playlist::Restart() {
 }
 
 void Playlist::Seek(bool next = true) {
-    if(next)
-        m_index++;
-    else
-        m_index--;
+    Current()->Reset();
+    if (m_blend_patterns) {
 
-    m_index = modulo(m_index, m_pattern_count);
+    } else {
+        if (next)
+            m_index++;
+        else
+            m_index--;
 
-    m_paused = false;
+        m_index = modulo(m_index, m_pattern_count);
+
+        m_paused = false;
+    }
 }
 
 void Playlist::Pause() {

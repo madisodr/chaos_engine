@@ -1,8 +1,9 @@
-#ifndef SHIMMER_H
+#ifndef SHIMMER_H1
 #define SHIMMER_H
 
 #include <FastLED.h>
 #include "config.h"
+#include "pattern.h"
 #include "utils.h"
 
 class Shimmer : public Pattern
