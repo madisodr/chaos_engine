@@ -5,7 +5,6 @@
 #include "config.h"
 #include "utils.h"
 
-#define DELAY 20
 class Shimmer : public Pattern
 {
     public:
@@ -36,7 +35,7 @@ void Shimmer::Run() {
         }
     }
 
-    delay(DELAY);
+    delay(20);
 }
 
 #endif // SHIMMER_H

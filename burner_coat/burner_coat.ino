@@ -20,8 +20,10 @@ CRGBPalette16 target_palette;
 BreathingRainbow* breathing = new BreathingRainbow(5);
 Shimmer* shimmer = new Shimmer(5);
 Ripple* ripple = new Ripple(5);
+DoubleMarqee* rainbow_marqee = new DoubleMarqee(5, true);
+DoubleMarqee* orange_marqee = new DoubleMarqee(5, false);
     
-Pattern* p_list[] = { breathing, ripple};
+Pattern* p_list[] = { breathing, rainbow_marqee, orange_marqee};
 Playlist* playlist = new Playlist(p_list, ARRAY_SIZE(p_list));
 /* setup */
 void setup() {

@@ -5,7 +5,6 @@
 #include "config.h"
 #include "utils.h"
 
-#define DELAY 20
 class BreathingRainbow : public Pattern
 {
     public:
@@ -37,7 +36,7 @@ void BreathingRainbow::Run() {
   m_hue++;
 
   fill_rainbow(leds, REAL_NUM_LEDS, m_hue, m_delta);
-  delay(DELAY);
+  delay(20);
 }
 
 #endif // BREATHING_RAINBOW_H

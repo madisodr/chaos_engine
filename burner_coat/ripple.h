@@ -5,7 +5,6 @@
 #include "config.h"
 #include "utils.h"
 
-#define DELAY 20
 class Ripple : public Pattern
 {
     public:
@@ -73,8 +72,7 @@ void Ripple::Run() {
     }
   }
 
-  delay(DELAY);
+  delay(20);
 }
-
 
 #endif // RIPPLE_H
