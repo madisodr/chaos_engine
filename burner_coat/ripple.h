@@ -9,61 +9,66 @@
 class Ripple : public Pattern
 {
     public:
-        Ripple(uint16_t _time);
+        Ripple(uint16_t _time, uint16_t _delay);
         ~Ripple();
 
-        void Run();
+        void Generate(CRGB* arr);
     private:
         int m_color;
         int m_center;
         int m_step;
-        const int m_max_steps = 15;
+        const int m_max_steps = 20;
         const float m_fade_rate = .9;
         int m_diff;
 
         inline int Wrap(int step);
 };
 
-Ripple::Ripple(uint16_t _time) : Pattern(_time) {
+Ripple::Ripple(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
+{
     m_center = 0;
     m_step = -1;
-    m_max_brightness = MAX_BRIGHTNESS;
 }
 
 Ripple::~Ripple() {
 
 }
 
-inline int Ripple::Wrap(int step) {
+inline int Ripple::Wrap(int step)
+{
     if (step < 0)
-        return REAL_NUM_LEDS + step;
-    else if (step > REAL_NUM_LEDS - 1)
-        return step - REAL_NUM_LEDS;
+        return NUM_LEDS + step;
+    else if (step > NUM_LEDS - 1)
+        return step - NUM_LEDS;
     else
         return step;
 }
 
-void Ripple::Run() {
+void Ripple::Generate(CRGB* arr)
+{
+
+    fadeToBlackBy(arr, NUM_LEDS, 30);
     if (m_step == -1) {
-        m_center = random(REAL_NUM_LEDS);
+        m_center = random(NUM_LEDS);
 
         if (m_center > LEFT_MID && m_center <= RIGHT_MID) {
-            m_color = 20 + random8(36);
+            m_color = 0 + random8(20);
         } else {
-            m_color = 120 + random8(36);;
+            m_color = 130 + random8(10);
         }
         m_step = 0;
     }
+
     if (m_step == 0) {
-        leds[m_center] = CHSV(m_color, 255, MAX_BRIGHTNESS);
+        arr[m_center] = CHSV(m_color, 255, MAX_BRIGHTNESS);
         m_step ++;
     } else {
         if (m_step < m_max_steps) {
-            leds[Wrap(m_center + m_step)] = CHSV(m_color, 255, pow(m_fade_rate, m_step) * MAX_BRIGHTNESS);
-            leds[Wrap(m_center - m_step)] = CHSV(m_color, 255, pow(m_fade_rate, m_step) * MAX_BRIGHTNESS);
+            arr[Wrap(m_center + m_step)] = CHSV(m_color, 255, pow(m_fade_rate, m_step) * MAX_BRIGHTNESS);
+            arr[Wrap(m_center - m_step)] = CHSV(m_color, 255, pow(m_fade_rate, m_step) * MAX_BRIGHTNESS);
             if (m_step > 3) {
-                leds[Wrap(m_center + m_step - 3)] = CHSV(m_color, 255, pow(m_fade_rate, m_step - 2) * MAX_BRIGHTNESS);
-                leds[Wrap(m_center - m_step + 3)] = CHSV(m_color, 255, pow(m_fade_rate, m_step - 2) * MAX_BRIGHTNESS);
+                arr[Wrap(m_center + m_step - 3)] = CHSV(m_color, 255, pow(m_fade_rate, m_step - 2) * MAX_BRIGHTNESS);
+                arr[Wrap(m_center - m_step + 3)] = CHSV(m_color, 255, pow(m_fade_rate, m_step - 2) * MAX_BRIGHTNESS);
             }
             m_step++;
         } else {
@@ -71,7 +76,7 @@ void Ripple::Run() {
         }
     }
 
-    delay(20);
+    blur1d(arr, NUM_LEDS, .1);
 }
 
 #endif // RIPPLE_H

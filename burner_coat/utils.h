@@ -1,12 +1,14 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-template<size_t SIZE, class T> inline size_t ARRAY_SIZE(T (&arr)[SIZE]) {
+template<size_t SIZE, class T> inline size_t ARRAY_SIZE(T (&arr)[SIZE])
+{
     return SIZE;
 }
 
 /* Utility Methos */
-CRGB wheel(byte wheel_pos) {
+CRGB wheel(byte wheel_pos)
+{
     CRGB c;
 
     if (wheel_pos < 85) {
@@ -22,7 +24,8 @@ CRGB wheel(byte wheel_pos) {
     return c;
 }
 
-inline int modulo(int x, int mod) {
+inline int modulo(int x, int mod)
+{
     if (x < 0)
         return mod - abs(x);
     else if (x >= mod)

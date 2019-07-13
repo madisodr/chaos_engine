@@ -33,14 +33,14 @@ CFLAGS_STD        = -std=gnu11
 CXXFLAGS_STD      = -std=gnu++11
 
 ### CXXFLAGS
-# CXXFLAGS         += -pedantic -Wall -Wextra
+CXXFLAGS         += -pedantic -Wall -Wextra
 
 ### MONITOR_PORT
 ### The port your board is connected to. Using an '*' tries all the ports and finds the right one.
 MONITOR_PORT := /dev/null
 ISP_PROG := usbtiny
 ISP_PORT          = /dev/ttyACM0
-BOARD_TAG         = attiny85
+BOARD_TAG         = uno
 
 ### CURRENT_DIR
 CURRENT_DIR       = $(shell basename $(CURDIR))

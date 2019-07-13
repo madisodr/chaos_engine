@@ -9,38 +9,49 @@
 class DoubleMarqee : public Pattern
 {
     public:
-        DoubleMarqee(uint16_t _time);
+        DoubleMarqee(uint16_t _time, uint16_t _delay);
         ~DoubleMarqee();
 
-        void Run();
+        void Generate(CRGB* arr);
+
     private:
-        const int marqee_length = 12;
+        const byte m_delta = 255 / NUM_LEDS;
+        uint8_t m_hue;
+
 };
 
-DoubleMarqee::DoubleMarqee(uint16_t _time): Pattern(_time) {
+DoubleMarqee::DoubleMarqee(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
+{
+    m_hue = 0;
 }
 
-DoubleMarqee::~DoubleMarqee() {
+DoubleMarqee::~DoubleMarqee() {}
 
-}
 
-void DoubleMarqee::Run() {
-    CRGB color;
-    int l_idx, r_idx;
+void DoubleMarqee::Generate(CRGB* arr)
+{
+    m_hue++;
+    for (uint16_t i = 0; i < STRIP_LENGTH; i++) {
 
-    for (uint16_t j = 255; j > 0; j--) { // cycle of all colors on wheel
-        for (uint16_t i = 0; i < STRIP_LENGTH; i++) {
-            color = wheel(((i * 256 / (STRIP_LENGTH)) + j) & 255);
-            l_idx = modulo(LEFT_TOP - i, REAL_NUM_LEDS);
-            leds[l_idx] = color;
+        if (i > m_num_leds)
+            continue;
 
-            r_idx = modulo(RIGHT_TOP + i, REAL_NUM_LEDS);
-            leds[r_idx] = color;
-        }
+        CRGB color = wheel(((i * 256 / (STRIP_LENGTH)) + m_hue) & 255);
+        int l_idx = modulo(LEFT_TOP - i, NUM_LEDS);
+        arr[l_idx] = color;
 
-        delay(10);
+        int r_idx = modulo(RIGHT_TOP + i, NUM_LEDS);
+        arr[r_idx] = color;
     }
 
+    EVERY_N_MILLISECONDS(100) {
+        m_num_leds += 1;
+    }
+
+    if (m_num_leds >= NUM_LEDS) {
+        m_num_leds = NUM_LEDS;
+    }
 }
+
 
 #endif // DOUBLE_MARQEE_H

@@ -12,27 +12,25 @@ class Shimmer : public Pattern
         Shimmer(uint16_t _time);
         ~Shimmer();
 
-        void Run();
+        void Generate(CRGB* arr);
     private:
-
 };
 
-Shimmer::Shimmer(uint16_t _time) : Pattern(_time) {
+Shimmer::Shimmer(uint16_t _time) : Pattern(_time)
+{
     m_max_brightness = MAX_BRIGHTNESS;
 }
 
-Shimmer::~Shimmer() {
+Shimmer::~Shimmer() {}
 
-}
-
-void Shimmer::Run() {
-    fadeToBlackBy(leds, NUM_LEDS, 200);
-
-    for (int i = 0; i < REAL_NUM_LEDS; i++) {
+void Shimmer::Generate(CRGB* arr)
+{
+    fadeToBlackBy(arr, NUM_LEDS, 40);
+    for (int i = 0; i < NUM_LEDS; i++) {
         if (i > LEFT_MID && i <= RIGHT_MID) {
-            leds[i] = LED_COLOR_HIGH;
+            arr[i] = LED_COLOR_HIGH;
         } else {
-            leds[i] = LED_COLOR_LOW;
+            arr[i] = LED_COLOR_LOW;
         }
     }
 

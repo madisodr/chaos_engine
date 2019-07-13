@@ -11,16 +11,17 @@ class Playlist
         ~Playlist();
 
         Pattern* Current();
-        void SetPattern(Pattern* br);
-        void Restart();
+        Pattern* GetNextPattern();
+        Pattern* GetPattern(int index);
+        inline void Restart();
         void Seek(bool next);
-        void Pause();
+        inline uint8_t GetIndex();
+        
     private:
         Pattern** m_list;
         uint8_t m_index;
         bool m_paused;
         uint8_t m_pattern_count;
-        bool m_blend_patterns;
 };
 
 Playlist::Playlist(Pattern** _list, uint8_t _pattern_count)
@@ -29,15 +30,35 @@ Playlist::Playlist(Pattern** _list, uint8_t _pattern_count)
     m_index = 0;
     m_paused = false;
     m_pattern_count = _pattern_count;
-    m_blend_patterns = false;
+}
+
+Playlist::~Playlist() {
+    for (int i = 0; i < m_pattern_count; i++) {
+        delete m_list[i];
+    }
+
+    delete m_list;
 }
 
 // returns currently playing pattern
 Pattern* Playlist::Current() {
-    if (m_index < 0 || m_index > m_pattern_count)
+    return m_list[m_index];
+}
+
+Pattern* Playlist::GetNextPattern() {
+    if (m_index+1 >= m_pattern_count) {
         return m_list[0];
-    else
-        return m_list[m_index];
+    } else {
+        return m_list[m_index + 1];
+    }
+}
+
+Pattern* Playlist::GetPattern(int index) {
+    if (index < 0 || index > m_pattern_count) {
+        return NULL;
+    } else {
+        return m_list[index];
+    }
 }
 
 void Playlist::Restart() {
@@ -45,23 +66,17 @@ void Playlist::Restart() {
 }
 
 void Playlist::Seek(bool next = true) {
-    Current()->Reset();
-    if (m_blend_patterns) {
+    if (next)
+        m_index++;
+    else
+        m_index--;
 
-    } else {
-        if (next)
-            m_index++;
-        else
-            m_index--;
-
-        m_index = modulo(m_index, m_pattern_count);
-
-        m_paused = false;
-    }
+    m_index = modulo(m_index, m_pattern_count);
+    m_paused = false;
 }
 
-void Playlist::Pause() {
-    m_paused = true;
+uint8_t Playlist::GetIndex() {
+    return m_index;
 }
 
 #endif // PLAYLIST_H
