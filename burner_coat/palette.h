@@ -8,7 +8,7 @@ enum Palette_Ids {
     MIX,
     ORG
 };
-
+/*
 const TProgmemPalette16 orangePalette PROGMEM =
 {
     P_ORG, CRGB::Black, CRGB::Black, CRGB::Black,
@@ -23,22 +23,21 @@ const TProgmemPalette16 mixedPalette PROGMEM =
     P_TRL, CRGB::Black, CRGB::Black, CRGB::Black,
     P_TRL, CRGB::Black, CRGB::Black, CRGB::Black,
     P_ORG, CRGB::Black, CRGB::Black, CRGB::Black
-};
+};*/
 
 static uint8_t palette_speed = 10;
 uint8_t current_pattern = 0; // Index number of which pattern is current
-CRGBPalette16 current_palette(orangePalette);
+CRGBPalette16 current_palette(HeatColors_p);
 CRGBPalette16 target_palette;
 
 void updatePalette()
 {
-    uint8_t hold_palette_multiplier = 1;
     uint8_t speed_step = 1;
     static uint8_t palette_idx = Palette_Ids::MIX; // index for the palettes array
-    uint8_t second_hand = ((millis() / 1000) / hold_palette_multiplier) % 60;
+    uint8_t second_hand = (millis() / 1000) % 60;
     static uint8_t last_second = 99;
 
-    const CRGBPalette16 palettes[2] = {mixedPalette, orangePalette};
+    const CRGBPalette16 palettes[] = {HeatColors_p, RainbowColors_p};
 
     if (last_second != second_hand) {
         last_second = second_hand;

@@ -7,24 +7,24 @@
 #include "breathing_rainbow.h"
 #include "confetti.h"
 #include "double_marqee.h"
-#include "noise.h"
+//#include "noise.h"
 #include "ripple.h"
 //#include "shimmer.h"
 
-#define PATTERN_LENGTH 20
+#define PATTERN_LENGTH 120
 
 BreathingRainbow* breathing = new BreathingRainbow(PATTERN_LENGTH, 5);
 Confetti* confetti = new Confetti(PATTERN_LENGTH, 10);
-Ripple* ripple = new Ripple(PATTERN_LENGTH, 40);
+Ripple* ripple = new Ripple(PATTERN_LENGTH, 30);
 DoubleMarqee* rainbow_marqee = new DoubleMarqee(PATTERN_LENGTH, 10);
-Noise* noise = new Noise(PATTERN_LENGTH, 30);
+//Noise* noise = new Noise(PATTERN_LENGTH, 30);
+//Shimmer* shimmer = new Shimmer(PATTERN_LENGTH, 20);
 
 Pattern* p_list[] = {
     rainbow_marqee,
-    noise,
-    confetti,
-    breathing,
     ripple,
+    breathing,
+    confetti,
 };
 
 Playlist* playlist = new Playlist(p_list, ARRAY_SIZE(p_list));
@@ -36,8 +36,8 @@ static float blend_amount = 0;
 static uint16_t start_blending = 0;
 bool blending = false;
 
-Pattern* running_pattern = playlist->GetPattern(playlist->Current());
-Pattern* next_pattern = playlist->GetPattern(playlist->GetNextPattern(false));
+Pattern* running_pattern = playlist->GetCurrent();
+Pattern* next_pattern = playlist->GetNext();
 
 /* setup */
 void setup()
@@ -47,14 +47,16 @@ void setup()
 
     randomSeed(analogRead(A1));
     // Initialize our coordinates to some random values
+    
 #ifdef NOISE_H
     Noise::x = random16();
     Noise::y = random16();
     Noise::z = random16();
 #endif
+
     // Set the maximum power the LEDs can pull
     set_max_power_in_volts_and_milliamps(5, MAX_VOLTS);
-    start_blending = millis() + (PATTERN_LENGTH * 1000L / 4 * 3);
+    start_blending = millis() + min((running_pattern->m_time * 1000L / 4 * 3), 20);
 }
 
 /* main loop */
@@ -91,20 +93,19 @@ void loop()
     FastLED.delay(_delay);
 
     EVERY_N_SECONDS_I(timer, running_pattern->m_time) {
-        start_blending = millis() + (PATTERN_LENGTH * 1000L / 4 * 3);
+        start_blending = millis() + min((running_pattern->m_time * 1000L / 4 * 3), 20);
         blend_amount = 0;
         blending = false;
 
-        uint8_t next_pattern_index = playlist->GetNextPattern(true);
+        playlist->SetupNextPattern(true);
         
         running_pattern = next_pattern;
-        next_pattern = playlist->GetPattern(next_pattern_index);
+        playlist->SetCurrentPattern(next_pattern);
+        
+        next_pattern = playlist->GetNext();
         next_pattern->Reset();
+
         // Update timer period to new pattern's length
         timer.setPeriod(running_pattern->m_time);
     }
-
-#ifdef NOISE_H
-
-#endif
 }

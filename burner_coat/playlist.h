@@ -10,15 +10,19 @@ class Playlist
         Playlist(Pattern** _list, uint8_t _pattern_count);
         ~Playlist();
 
-        uint8_t Current();
-        uint8_t GetNextPattern(bool random_pat);
-        Pattern* GetPattern(int index);
+        Pattern* GetCurrent();
+        Pattern* GetNext();
+        
+        void SetupNextPattern(bool random_pat);
+        Pattern* GetPattern(uint8_t index);
         inline void Restart();
-        void Seek(bool next);
+        inline void SetCurrentPattern(Pattern* p);
         inline uint8_t GetIndex();
 
     private:
         Pattern** m_list;
+        Pattern* m_current;
+        Pattern* m_next;
         uint8_t m_index;
         bool m_paused;
         uint8_t m_pattern_count;
@@ -30,9 +34,12 @@ Playlist::Playlist(Pattern** _list, uint8_t _pattern_count)
     m_index = 0;
     m_paused = false;
     m_pattern_count = _pattern_count;
+    m_current = m_list[0];
+    m_next = m_list[1];
 }
 
-Playlist::~Playlist() {
+Playlist::~Playlist()
+{
     for (int i = 0; i < m_pattern_count; i++) {
         delete m_list[i];
     }
@@ -41,37 +48,47 @@ Playlist::~Playlist() {
 }
 
 // returns currently playing pattern
-uint8_t Playlist::Current() {
-    return m_index;
+Pattern* Playlist::GetCurrent()
+{
+    return m_current;
 }
 
-uint8_t Playlist::GetNextPattern(bool random_pat = false) {
+Pattern* Playlist::GetNext()
+{
+    return m_next;
+}
+
+void Playlist::SetupNextPattern(bool random_pat = false)
+{
     if (random_pat) {
         int x = m_index;
         while (x == m_index) {
-            x = random(m_pattern_count - 1);
+            m_index = random(m_pattern_count);
         }
-
-        return x;
     } else {
-        return modulo(m_index++, m_pattern_count);
+        m_index = modulo(m_index+1, m_pattern_count);
     }
+    
+    m_next = m_list[m_index];
 }
 
-Pattern* Playlist::GetPattern(int index) {
-    if (index < 0 || index > m_pattern_count) {
+Pattern* Playlist::GetPattern(uint8_t index)
+{
+    if (index > m_pattern_count) {
         return NULL;
     } else {
         return m_list[index];
     }
 }
 
-void Playlist::Restart() {
-    m_index = 0;
+void Playlist::SetCurrentPattern(Pattern* p)
+{
+    m_current = p;
 }
 
-uint8_t Playlist::GetIndex() {
-    return m_index;
+void Playlist::Restart() {
+    m_index = 0;
+    m_current = m_list[0];
 }
 
 #endif // PLAYLIST_H

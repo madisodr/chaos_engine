@@ -9,23 +9,20 @@
 class Shimmer : public Pattern
 {
     public:
-        Shimmer(uint16_t _time);
+        Shimmer(uint16_t _time, uint16_t _delay);
         ~Shimmer();
 
         void Generate(CRGB* arr);
     private:
 };
 
-Shimmer::Shimmer(uint16_t _time) : Pattern(_time)
-{
-    m_max_brightness = MAX_BRIGHTNESS;
-}
+Shimmer::Shimmer(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay) {}
 
 Shimmer::~Shimmer() {}
 
 void Shimmer::Generate(CRGB* arr)
 {
-    fadeToBlackBy(arr, NUM_LEDS, 40);
+    fadeToBlackBy(arr, NUM_LEDS, 80);
     for (int i = 0; i < NUM_LEDS; i++) {
         if (i > LEFT_MID && i <= RIGHT_MID) {
             arr[i] = LED_COLOR_HIGH;
@@ -33,8 +30,6 @@ void Shimmer::Generate(CRGB* arr)
             arr[i] = LED_COLOR_LOW;
         }
     }
-
-    delay(20);
 }
 
 #endif // SHIMMER_H

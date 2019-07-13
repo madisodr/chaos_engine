@@ -17,8 +17,8 @@ class Ripple : public Pattern
         int m_color;
         int m_center;
         int m_step;
-        const int m_max_steps = 10;
-        const float m_fade_rate = .95;
+        const int m_max_steps = 20;
+        const float m_fade_rate = .9;
         int m_diff;
 
         inline int Wrap(int step);
@@ -46,8 +46,8 @@ inline int Ripple::Wrap(int step)
 
 void Ripple::Generate(CRGB* arr)
 {
-    fadeToBlackBy(arr, NUM_LEDS, 70);
-    
+
+    fadeToBlackBy(arr, NUM_LEDS, 30);
     if (m_step == -1) {
         m_center = random(NUM_LEDS);
 
