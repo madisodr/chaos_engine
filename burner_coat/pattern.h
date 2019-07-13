@@ -34,12 +34,12 @@ uint16_t Pattern::GetDelay()
 
 void Pattern::Reset()
 {
-    m_num_leds = 1;
+    m_num_leds = 0;
 }
 
 void Pattern::Breath()
 {
-    float breath = (exp(sin(millis()/5000.0*PI)) - 0.36787944)*108.0;
+    float breath = (exp(sin(millis() / 5000.0 * PI)) - 0.36787944) * 108.0;
     breath = map(breath, 0, MAX_BRIGHTNESS, 20, 80);
     FastLED.setBrightness(breath);
 }

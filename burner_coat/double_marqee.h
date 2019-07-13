@@ -17,7 +17,6 @@ class DoubleMarqee : public Pattern
     private:
         const byte m_delta = 255 / NUM_LEDS;
         uint8_t m_hue;
-
 };
 
 DoubleMarqee::DoubleMarqee(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)

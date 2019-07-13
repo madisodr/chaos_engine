@@ -5,15 +5,11 @@
 // LED Strip Output Pin
 #define LED_PIN 3
 
-const uint8_t kMatrixWidth  = 10;
-const uint8_t kMatrixHeight = 11;
-
 #define NUM_LEDS 106 // (kMatrixWidth * kMatrixHeight)
 //#define REAL_NUM_LEDS 106
 #define STRIP_LENGTH (NUM_LEDS / 2)
-#define MAX_DIMENSION ((kMatrixWidth > kMatrixHeight) ? kMatrixWidth : kMatrixHeight)
 
-#define MAX_BRIGHTNESS 150
+#define MAX_BRIGHTNESS 255
 // The leds
 CRGB leds[NUM_LEDS];
 
@@ -32,26 +28,4 @@ const int LEFT_MID = LEFT_TOP - (STRIP_LENGTH/2) + 5;
 #define P_ORG 0xFF4500
 #define P_TRL 0x00F2FF
 
-// ID's for each palette in our program
-enum Palette_Ids {
-    MIX,
-    ORG
-};
-/*
-extern const TProgmemPalette16 orangePalette PROGMEM =
-{
-    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black,
-    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black,
-    CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black,
-    CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black
-};
-
-extern const TProgmemPalette16 mixedPalette PROGMEM =
-{
-    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black,
-    P_TRL, CRGB::Black, CRGB::Black, CRGB::Black,
-    P_TRL, CRGB::Black, CRGB::Black, CRGB::Black,
-    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black
-};
-*/
 #endif // CONFIG_H

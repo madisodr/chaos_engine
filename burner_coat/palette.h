@@ -1,6 +1,31 @@
 #ifndef PALETTE_H
 #define PALETTE_H
 
+#include "config.h"
+
+// ID's for each palette in our program
+enum Palette_Ids {
+    MIX,
+    ORG
+};
+
+const TProgmemPalette16 orangePalette PROGMEM =
+{
+    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black,
+    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black,
+    CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black,
+    CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black
+};
+
+const TProgmemPalette16 mixedPalette PROGMEM =
+{
+    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black,
+    P_TRL, CRGB::Black, CRGB::Black, CRGB::Black,
+    P_TRL, CRGB::Black, CRGB::Black, CRGB::Black,
+    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black
+};
+
+static uint8_t palette_speed = 10;
 uint8_t current_pattern = 0; // Index number of which pattern is current
 CRGBPalette16 current_palette(orangePalette);
 CRGBPalette16 target_palette;
@@ -18,8 +43,11 @@ void updatePalette()
     if (last_second != second_hand) {
         last_second = second_hand;
 #ifdef NOISE_H
-        if (0 == second_hand % 10) {
-            second_hand < 30 ? speed += speed_step : speed -= speed_step;
+        if (0 == second_hand % 5) {
+            second_hand < 30 ? palette_speed += speed_step : palette_speed -= speed_step;
+        }
+
+        if (0 == second_hand % 30) {
             palette_idx++;
         }
 #endif
@@ -33,6 +61,10 @@ void updatePalette()
 inline CRGBPalette16 getCurrentPalette()
 {
     return current_palette;
+}
+
+inline uint8_t GetCurrentSpeed() {
+    return palette_speed;
 }
 
 #endif // PALETTE_H

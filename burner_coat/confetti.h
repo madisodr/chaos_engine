@@ -18,7 +18,7 @@ Confetti::~Confetti() {}
 
 void Confetti::Generate(CRGB* arr)
 {
-    fadeToBlackBy(arr, NUM_LEDS, 50);
+    fadeToBlackBy(arr, NUM_LEDS, 30);
     
     int pos = random16(NUM_LEDS);
 
