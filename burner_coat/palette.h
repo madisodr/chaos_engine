@@ -26,7 +26,7 @@ const TProgmemPalette16 mixedPalette PROGMEM =
 };*/
 
 static uint8_t palette_speed = 10;
-uint8_t current_pattern = 0; // Index number of which pattern is current
+static uint8_t current_pattern = 0; // Index number of which pattern is current
 CRGBPalette16 current_palette(HeatColors_p);
 CRGBPalette16 target_palette;
 

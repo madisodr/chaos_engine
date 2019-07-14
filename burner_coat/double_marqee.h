@@ -13,9 +13,7 @@ class DoubleMarqee : public Pattern
         ~DoubleMarqee();
 
         void Generate(CRGB* arr);
-
     private:
-        const byte m_delta = 255 / NUM_LEDS;
         uint8_t m_hue;
 };
 
@@ -30,16 +28,22 @@ DoubleMarqee::~DoubleMarqee() {}
 void DoubleMarqee::Generate(CRGB* arr)
 {
     m_hue++;
-    for (uint16_t i = 0; i < STRIP_LENGTH; i++) {
-
-        if (i > m_num_leds)
+    CRGB color;
+    for (uint8_t i = 0; i < STRIP_LENGTH; i++) {
+        if (i > m_num_leds) {
             continue;
+        }
 
-        CRGB color = wheel(((i * 256 / (STRIP_LENGTH)) + m_hue) & 255);
-        int l_idx = modulo(LEFT_TOP - i, NUM_LEDS);
+        if (m_reverse) {
+            color = wheel(((i * 256 / (STRIP_LENGTH)) - m_hue) & 255);
+        } else {
+            color = wheel(((i * 256 / (STRIP_LENGTH)) + m_hue) & 255);
+        }
+
+        uint8_t l_idx = modulo(LEFT_TOP - i, NUM_LEDS);
         arr[l_idx] = color;
 
-        int r_idx = modulo(RIGHT_TOP + i, NUM_LEDS);
+        uint8_t r_idx = modulo(RIGHT_TOP + i, NUM_LEDS);
         arr[r_idx] = color;
     }
 
@@ -51,6 +55,5 @@ void DoubleMarqee::Generate(CRGB* arr)
         m_num_leds = NUM_LEDS;
     }
 }
-
 
 #endif // DOUBLE_MARQEE_H

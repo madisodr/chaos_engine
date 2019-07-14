@@ -44,6 +44,9 @@ uint16_t Noise::z;
 Noise::Noise(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
 {
     m_speed = GetCurrentSpeed();
+    Noise::x = random16();
+    Noise::y = random16();
+    Noise::z = random16();
 }
 
 Noise::~Noise() {}
@@ -112,6 +115,7 @@ void Noise::Generate(CRGB* arr) {
 
     // generate noise data
     MakeNoise();
+
     for (int i = 0; i < m_matrix_width; i++) {
         for (int j = 0; j < m_matrix_height; j++) {
             // We use the value at the (i,j) coordinate in the noise

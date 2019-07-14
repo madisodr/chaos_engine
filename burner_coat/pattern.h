@@ -1,6 +1,7 @@
 #ifndef PATTERN_H
 #define PATTERN_H
 
+#include <FastLED.h>
 struct CRGB;
 
 class Pattern
@@ -11,37 +12,48 @@ class Pattern
 
         virtual void Generate(CRGB* arr);
         uint16_t GetDelay();
+        uint16_t GetTime();
         void Reset();
-
-        uint16_t m_time;
-        uint8_t m_max_brightness;
-        uint16_t m_num_leds;
-        
+        void ToggleReverse();
     protected:
-        void Breath();
+        void Breath(float _speed);
+        bool m_reverse;
+        uint16_t m_num_leds;
+        uint8_t m_pixel_count;
     private:
         uint16_t m_delay;
+        uint16_t m_time;
 };
 
-Pattern::Pattern(uint16_t _time, uint16_t _delay) : m_time(_time), m_num_leds(1), m_delay(_delay) {}
+Pattern::Pattern(uint16_t _time, uint16_t _delay) : m_time(_time), m_delay(_delay), m_num_leds(1), m_reverse(false) {}
 
 Pattern::~Pattern() {}
 
-uint16_t Pattern::GetDelay()
+inline uint16_t Pattern::GetDelay()
 {
     return m_delay;
 }
 
-void Pattern::Reset()
+inline uint16_t Pattern::GetTime()
 {
-    m_num_leds = 0;
+    return m_time;
 }
 
-void Pattern::Breath()
+inline void Pattern::Reset()
 {
-    float breath = (exp(sin(millis() / 5000.0 * PI)) - 0.36787944) * 108.0;
+    m_num_leds = 0;
+    m_pixel_count = random(4,8);
+}
+
+void Pattern::Breath(float _speed)
+{
+    float breath = (exp(sin(millis() / _speed * PI)) - 0.36787944) * 108.0;
     breath = map(breath, 0, MAX_BRIGHTNESS, 20, 80);
     FastLED.setBrightness(breath);
 }
 
+inline void Pattern::ToggleReverse()
+{
+    m_reverse ^= true;
+}
 #endif // PATTERN_H

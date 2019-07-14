@@ -9,22 +9,25 @@
 #include "double_marqee.h"
 //#include "noise.h"
 #include "ripple.h"
-//#include "shimmer.h"
+#include "moving_pixels.h"
+#include "shimmer.h"
 
-#define PATTERN_LENGTH 120
+#define PATTERN_LENGTH 30
 
-BreathingRainbow* breathing = new BreathingRainbow(PATTERN_LENGTH, 5);
+BreathingRainbow* breathing = new BreathingRainbow(PATTERN_LENGTH, 10);
 Confetti* confetti = new Confetti(PATTERN_LENGTH, 10);
-Ripple* ripple = new Ripple(PATTERN_LENGTH, 30);
-DoubleMarqee* rainbow_marqee = new DoubleMarqee(PATTERN_LENGTH, 10);
-//Noise* noise = new Noise(PATTERN_LENGTH, 30);
-//Shimmer* shimmer = new Shimmer(PATTERN_LENGTH, 20);
+Ripple* ripple = new Ripple(PATTERN_LENGTH, 50);
+DoubleMarqee* rainbow_marqee = new DoubleMarqee(PATTERN_LENGTH, 20);
+MovingPixels* pixels = new MovingPixels(PATTERN_LENGTH, 30);
+Shimmer* shimmer = new Shimmer(PATTERN_LENGTH, 40);
 
 Pattern* p_list[] = {
+    shimmer,
     rainbow_marqee,
-    ripple,
-    breathing,
-    confetti,
+    pixels,
+    //breathing,
+    //confetti,
+    //ripple,
 };
 
 Playlist* playlist = new Playlist(p_list, ARRAY_SIZE(p_list));
@@ -32,31 +35,34 @@ Playlist* playlist = new Playlist(p_list, ARRAY_SIZE(p_list));
 CRGB staging_a[NUM_LEDS];
 CRGB staging_b[NUM_LEDS];
 
-static float blend_amount = 0;
-static uint16_t start_blending = 0;
+float blend_amount;
+uint16_t start_blending;
 bool blending = false;
 
-Pattern* running_pattern = playlist->GetCurrent();
-Pattern* next_pattern = playlist->GetNext();
+Pattern* running_pattern;
+Pattern* next_pattern;
+
+#define BLEND_TIME_MULTIPLIER 1000L / 4 * 3
 
 /* setup */
 void setup()
 {
-    //Serial.begin(19200);
-    LEDS.addLeds<WS2811, LED_PIN, GRB>(leds, NUM_LEDS);
+    LEDS.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
 
     randomSeed(analogRead(A1));
-    // Initialize our coordinates to some random values
-    
-#ifdef NOISE_H
-    Noise::x = random16();
-    Noise::y = random16();
-    Noise::z = random16();
-#endif
 
     // Set the maximum power the LEDs can pull
     set_max_power_in_volts_and_milliamps(5, MAX_VOLTS);
-    start_blending = millis() + min((running_pattern->m_time * 1000L / 4 * 3), 20);
+
+    running_pattern = playlist->GetCurrent();
+
+    playlist->SetupNextPattern(true);
+    next_pattern = playlist->GetNext();
+    playlist->SetTotalDelay(running_pattern->GetDelay());
+
+    start_blending = millis() + min((running_pattern->GetTime() * BLEND_TIME_MULTIPLIER), 20);
+    blending = false;
+    blend_amount = 0.0;
 }
 
 /* main loop */
@@ -64,7 +70,6 @@ void loop()
 {
     // Fetch current pattern
     running_pattern->Generate(staging_a);
-    uint16_t _delay = running_pattern->GetDelay();
 
     if (millis() >= start_blending) {
         blending = true;
@@ -74,38 +79,44 @@ void loop()
         next_pattern->Generate(staging_b);
         blend(staging_a, staging_b, leds, NUM_LEDS, blend_amount);
 
-        EVERY_N_MILLISECONDS(int((running_pattern->m_time * 1000) / 255)) {
-            if (blending && blend_amount < 255) {
+        EVERY_N_MILLISECONDS(int((running_pattern->GetTime() * 1000) / 255)) {
+            if (blend_amount < 255) {
                 blend_amount++;
             }
         }
 
-        _delay += next_pattern->GetDelay();
+        EVERY_N_MILLISECONDS(500) {
+            if (playlist->GetTotalDelay() < next_pattern->GetDelay()) {
+                playlist->SetTotalDelay(playlist->GetTotalDelay() + 1);
+            } else if (playlist->GetTotalDelay() > next_pattern->GetDelay()) {
+                playlist->SetTotalDelay(playlist->GetTotalDelay() - 1);
+            }
+        }
     } else {
-
         for (int i = 0; i < NUM_LEDS; i++) {
             leds[i] = staging_a[i];
         }
     }
 
-
     FastLED.show();
-    FastLED.delay(_delay);
+    FastLED.delay(playlist->GetTotalDelay());
 
-    EVERY_N_SECONDS_I(timer, running_pattern->m_time) {
-        start_blending = millis() + min((running_pattern->m_time * 1000L / 4 * 3), 20);
+    EVERY_N_SECONDS_I(timer, running_pattern->GetTime()) {
+        start_blending = millis() + min((running_pattern->GetTime() * BLEND_TIME_MULTIPLIER), 20);
         blend_amount = 0;
         blending = false;
 
         playlist->SetupNextPattern(true);
-        
+
         running_pattern = next_pattern;
         playlist->SetCurrentPattern(next_pattern);
-        
+
         next_pattern = playlist->GetNext();
         next_pattern->Reset();
 
+        next_pattern->ToggleReverse();
+
         // Update timer period to new pattern's length
-        timer.setPeriod(running_pattern->m_time);
+        timer.setPeriod(running_pattern->GetTime());
     }
 }

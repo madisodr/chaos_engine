@@ -12,27 +12,25 @@ class Playlist
 
         Pattern* GetCurrent();
         Pattern* GetNext();
-        
+
         void SetupNextPattern(bool random_pat);
         Pattern* GetPattern(uint8_t index);
-        inline void Restart();
-        inline void SetCurrentPattern(Pattern* p);
-        inline uint8_t GetIndex();
+        void SetCurrentPattern(Pattern* p);
+        uint8_t GetIndex(Pattern* p);
+        uint8_t GetTotalDelay();
+        void SetTotalDelay(uint8_t total_delay);
 
     private:
         Pattern** m_list;
         Pattern* m_current;
         Pattern* m_next;
-        uint8_t m_index;
-        bool m_paused;
         uint8_t m_pattern_count;
+        uint16_t m_total_delay;
 };
 
 Playlist::Playlist(Pattern** _list, uint8_t _pattern_count)
 {
     m_list = _list;
-    m_index = 0;
-    m_paused = false;
     m_pattern_count = _pattern_count;
     m_current = m_list[0];
     m_next = m_list[1];
@@ -48,47 +46,59 @@ Playlist::~Playlist()
 }
 
 // returns currently playing pattern
-Pattern* Playlist::GetCurrent()
+inline Pattern* Playlist::GetCurrent()
 {
     return m_current;
 }
 
-Pattern* Playlist::GetNext()
+inline Pattern* Playlist::GetNext()
 {
     return m_next;
 }
 
+uint8_t Playlist::GetIndex(Pattern* p)
+{
+    for (int i = 0; i < m_pattern_count; i++) {
+        if (p == m_list[i]) {
+            return i;
+        }
+    }
+}
+
 void Playlist::SetupNextPattern(bool random_pat = false)
 {
+    uint8_t idx = GetIndex(m_next);
+    uint8_t curr = GetIndex(m_next);
+
     if (random_pat) {
-        int x = m_index;
-        while (x == m_index) {
-            m_index = random(m_pattern_count);
-        }
+        do {
+            idx = random8(m_pattern_count);
+        } while (idx == curr);
     } else {
-        m_index = modulo(m_index+1, m_pattern_count);
+        idx = modulo(idx + 1, m_pattern_count);
     }
-    
-    m_next = m_list[m_index];
+
+    m_next = m_list[idx];
 }
 
-Pattern* Playlist::GetPattern(uint8_t index)
+inline Pattern* Playlist::GetPattern(uint8_t index)
 {
-    if (index > m_pattern_count) {
-        return NULL;
-    } else {
-        return m_list[index];
-    }
+    return m_list[index];
 }
 
-void Playlist::SetCurrentPattern(Pattern* p)
+inline void Playlist::SetCurrentPattern(Pattern* p)
 {
     m_current = p;
 }
 
-void Playlist::Restart() {
-    m_index = 0;
-    m_current = m_list[0];
+inline uint8_t Playlist::GetTotalDelay()
+{
+    return m_total_delay;
+}
+
+inline void Playlist::SetTotalDelay(uint8_t total_delay)
+{
+    m_total_delay = total_delay;
 }
 
 #endif // PLAYLIST_H

@@ -21,7 +21,7 @@ class Ripple : public Pattern
         const float m_fade_rate = .9;
         int m_diff;
 
-        inline int Wrap(int step);
+        int Wrap(int step);
 };
 
 Ripple::Ripple(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
@@ -30,24 +30,23 @@ Ripple::Ripple(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
     m_step = -1;
 }
 
-Ripple::~Ripple() {
-
-}
+Ripple::~Ripple() {}
 
 inline int Ripple::Wrap(int step)
 {
-    if (step < 0)
+    if (step < 0) {
         return NUM_LEDS + step;
-    else if (step > NUM_LEDS - 1)
+    } else if (step > NUM_LEDS - 1) {
         return step - NUM_LEDS;
-    else
+    } else {
         return step;
+    }
 }
 
 void Ripple::Generate(CRGB* arr)
 {
-
     fadeToBlackBy(arr, NUM_LEDS, 30);
+
     if (m_step == -1) {
         m_center = random(NUM_LEDS);
 

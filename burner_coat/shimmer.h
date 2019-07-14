@@ -1,4 +1,4 @@
-#ifndef SHIMMER_H1
+#ifndef SHIMMER_H
 #define SHIMMER_H
 
 #include <FastLED.h>
