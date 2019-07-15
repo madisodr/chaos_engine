@@ -8,7 +8,7 @@
 #define NUM_LEDS 106
 #define STRIP_LENGTH (NUM_LEDS / 2)
 
-#define MAX_BRIGHTNESS 40
+#define MAX_BRIGHTNESS 80
 // The leds
 CRGB leds[NUM_LEDS];
 

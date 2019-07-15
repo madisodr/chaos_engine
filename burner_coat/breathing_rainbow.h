@@ -12,7 +12,7 @@ class BreathingRainbow : public Pattern
 
         void Generate(CRGB* arr);
     private:
-        const byte m_delta = 255 / NUM_LEDS;
+        byte m_delta = 255 / NUM_LEDS;
         uint8_t m_hue;
 };
 
@@ -28,6 +28,9 @@ void BreathingRainbow::Generate(CRGB* arr)
         arr[i] = hsv;
         hsv.hue += m_delta;
     }
+
+    
+    FastLED.setBrightness(20);
 }
 
 #endif // BREATHING_RAINBOW_H

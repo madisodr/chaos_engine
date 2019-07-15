@@ -14,14 +14,14 @@ class Ripple : public Pattern
 
         void Generate(CRGB* arr);
     private:
-        int m_color;
-        int m_center;
-        int m_step;
-        const int m_max_steps = 20;
-        const float m_fade_rate = .9;
-        int m_diff;
+        uint8_t m_color;
+        uint8_t m_center;
+        uint8_t m_step;
+        uint8_t m_max_steps = 20;
+        float m_fade_rate = .9;
+        uint8_t m_diff;
 
-        int Wrap(int step);
+        uint8_t Wrap(uint8_t _step);
 };
 
 Ripple::Ripple(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
@@ -32,14 +32,14 @@ Ripple::Ripple(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
 
 Ripple::~Ripple() {}
 
-inline int Ripple::Wrap(int step)
+inline uint8_t Ripple::Wrap(uint8_t _step)
 {
-    if (step < 0) {
-        return NUM_LEDS + step;
-    } else if (step > NUM_LEDS - 1) {
-        return step - NUM_LEDS;
+    if (_step < 0) {
+        return NUM_LEDS + _step;
+    } else if (_step > NUM_LEDS - 1) {
+        return _step - NUM_LEDS;
     } else {
-        return step;
+        return _step;
     }
 }
 
