@@ -7,12 +7,10 @@
 #include "breathing_rainbow.h"
 #include "confetti.h"
 #include "double_marqee.h"
-//#include "noise.h"
 #include "ripple.h"
 #include "moving_pixels.h"
-//#include "shimmer.h"
 
-#define PATTERN_LENGTH 30
+#define PATTERN_LENGTH 10
 
 BreathingRainbow* breathing = new BreathingRainbow(PATTERN_LENGTH, 10);
 Confetti* confetti = new Confetti(PATTERN_LENGTH, 10);
@@ -45,7 +43,7 @@ Pattern* next_pattern;
 /* setup */
 void setup()
 {
-    LEDS.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
+    LEDS.addLeds<WS2811, LED_PIN, GRB>(leds, NUM_LEDS);
 
     randomSeed(analogRead(A1));
 

@@ -22,6 +22,12 @@ MovingPixels::MovingPixels(uint16_t _time, uint16_t _delay) : Pattern(_time, _de
     m_pos = 0;
 }
 
+inline void MovingPixels::Reset()
+{
+    m_pixel_count = random(4,8);
+    ToggleReverse();
+}
+
 MovingPixels::~MovingPixels() {}
 
 void MovingPixels::Generate(CRGB* arr)
