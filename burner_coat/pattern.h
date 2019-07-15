@@ -43,6 +43,7 @@ inline void Pattern::Reset()
 {
     m_num_leds = 0;
     m_pixel_count = random(4,8);
+    ToggleReverse();
 }
 
 void Pattern::Breath(float _speed)

@@ -10,7 +10,7 @@
 //#include "noise.h"
 #include "ripple.h"
 #include "moving_pixels.h"
-#include "shimmer.h"
+//#include "shimmer.h"
 
 #define PATTERN_LENGTH 30
 
@@ -19,15 +19,13 @@ Confetti* confetti = new Confetti(PATTERN_LENGTH, 10);
 Ripple* ripple = new Ripple(PATTERN_LENGTH, 50);
 DoubleMarqee* rainbow_marqee = new DoubleMarqee(PATTERN_LENGTH, 20);
 MovingPixels* pixels = new MovingPixels(PATTERN_LENGTH, 30);
-Shimmer* shimmer = new Shimmer(PATTERN_LENGTH, 40);
 
 Pattern* p_list[] = {
-    shimmer,
+    breathing,
     rainbow_marqee,
     pixels,
-    //breathing,
-    //confetti,
-    //ripple,
+    confetti,
+    ripple,
 };
 
 Playlist* playlist = new Playlist(p_list, ARRAY_SIZE(p_list));
@@ -112,9 +110,6 @@ void loop()
         playlist->SetCurrentPattern(next_pattern);
 
         next_pattern = playlist->GetNext();
-        next_pattern->Reset();
-
-        next_pattern->ToggleReverse();
 
         // Update timer period to new pattern's length
         timer.setPeriod(running_pattern->GetTime());

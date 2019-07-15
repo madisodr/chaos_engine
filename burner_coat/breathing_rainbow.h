@@ -21,10 +21,9 @@ BreathingRainbow::~BreathingRainbow() {}
 
 void BreathingRainbow::Generate(CRGB* arr)
 {
-    //Breath(5000.0);
     m_hue++;
 
-    CHSV hsv = CHSV(m_hue, 255, MAX_BRIGHTNESS);
+    CHSV hsv = CHSV(m_hue, 255, 255);
     for ( int i = 0; i < NUM_LEDS; i++) {
         arr[i] = hsv;
         hsv.hue += m_delta;

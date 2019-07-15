@@ -8,7 +8,7 @@
 #define NUM_LEDS 106
 #define STRIP_LENGTH (NUM_LEDS / 2)
 
-#define MAX_BRIGHTNESS 60
+#define MAX_BRIGHTNESS 40
 // The leds
 CRGB leds[NUM_LEDS];
 
@@ -20,8 +20,8 @@ CRGB leds[NUM_LEDS];
 const uint8_t LEFT_TOP = 62;
 const uint8_t RIGHT_TOP = 63;
 
-const uint8_t RIGHT_MID = RIGHT_TOP + (STRIP_LENGTH/2) - 5;
-const uint8_t LEFT_MID = LEFT_TOP - (STRIP_LENGTH/2) + 5;
+const uint8_t RIGHT_MID = RIGHT_TOP + (STRIP_LENGTH/2);
+const uint8_t LEFT_MID = LEFT_TOP - (STRIP_LENGTH/2);
 
 // Define a better Orange
 #define P_ORG 0xFF4500

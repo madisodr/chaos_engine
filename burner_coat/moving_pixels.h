@@ -3,6 +3,7 @@
 
 #include <FastLED.h>
 #include "config.h"
+
 class MovingPixels : public Pattern
 {
     public:
