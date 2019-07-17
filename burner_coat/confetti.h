@@ -10,10 +10,12 @@ class Confetti : public Pattern
         Confetti(uint16_t _time, uint16_t _delay);
         ~Confetti();
         void Generate(CRGB* arr);
+        void Reset();
 };
 
 Confetti::Confetti(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay) {}
 Confetti::~Confetti() {}
+inline void Confetti::Reset() {}
 
 void Confetti::Generate(CRGB* arr)
 {

@@ -5,50 +5,55 @@
 #include "playlist.h"
 
 #include "breathing_rainbow.h"
+// #include "chaos_engine.h"
 #include "confetti.h"
 #include "double_marqee.h"
-#include "ripple.h"
 #include "moving_pixels.h"
+// #include "noise.h"
+#include "ripple.h"
 
-#define PATTERN_LENGTH 10
-
+/* TODO Take these out of the global variable space somehow */
+DoubleMarqee* rainbow_marqee = new DoubleMarqee(PATTERN_LENGTH, 20);
+MovingPixels* pixels = new MovingPixels(PATTERN_LENGTH, 30);
+//Noise* noise = new Noise(PATTERN_LENGTH, 60);
+//ChaosEngine* chaos = new ChaosEngine(PATTERN_LENGTH, 20);
 BreathingRainbow* breathing = new BreathingRainbow(PATTERN_LENGTH, 10);
 Confetti* confetti = new Confetti(PATTERN_LENGTH, 10);
 Ripple* ripple = new Ripple(PATTERN_LENGTH, 50);
-DoubleMarqee* rainbow_marqee = new DoubleMarqee(PATTERN_LENGTH, 20);
-MovingPixels* pixels = new MovingPixels(PATTERN_LENGTH, 30);
 
 Pattern* p_list[] = {
+    pixels,
     breathing,
     rainbow_marqee,
-    pixels,
     confetti,
     ripple,
 };
 
-Playlist* playlist = new Playlist(p_list, ARRAY_SIZE(p_list));
-
-CRGB staging_a[NUM_LEDS];
-CRGB staging_b[NUM_LEDS];
-
-float blend_amount;
-uint16_t start_blending;
-bool blending = false;
+Playlist* playlist;
 
 Pattern* running_pattern;
 Pattern* next_pattern;
 
-#define BLEND_TIME_MULTIPLIER 1000L / 4 * 3
+// The leds
+CRGB leds[NUM_LEDS];
+CRGB staging[NUM_LEDS];
+
+float blend_amount;
+uint16_t start_blending;
+bool blending;
+
+#define BLEND_TIME_MULTIPLIER 1000L / 4
 
 /* setup */
 void setup()
 {
     LEDS.addLeds<WS2811, LED_PIN, GRB>(leds, NUM_LEDS);
-
     randomSeed(analogRead(A1));
 
     // Set the maximum power the LEDs can pull
-    set_max_power_in_volts_and_milliamps(5, MAX_VOLTS);
+    FastLED.setMaxPowerInVoltsAndMilliamps(5, MAX_VOLTS);
+
+    playlist = new Playlist(p_list, ARRAY_SIZE(p_list));
 
     running_pattern = playlist->GetCurrent();
 
@@ -56,41 +61,42 @@ void setup()
     next_pattern = playlist->GetNext();
     playlist->SetTotalDelay(running_pattern->GetDelay());
 
-    start_blending = millis() + min((running_pattern->GetTime() * BLEND_TIME_MULTIPLIER), 20);
-    blending = false;
     blend_amount = 0.0;
+    start_blending = millis() + (running_pattern->GetTime() * (BLEND_TIME_MULTIPLIER / 3));
+    blending = false;
 }
 
 /* main loop */
 void loop()
 {
-    // Fetch current pattern
-    running_pattern->Generate(staging_a);
+    // generate the current pattern
+    running_pattern->Generate(leds);
 
+    // if the timer start_blending has elapsed, flip the flag
     if (millis() >= start_blending) {
         blending = true;
     }
 
     if (blending && next_pattern != NULL) {
-        next_pattern->Generate(staging_b);
-        blend(staging_a, staging_b, leds, NUM_LEDS, blend_amount);
+        // generate and blend the next pattern into the original
+        next_pattern->Generate(staging);
+        blend(leds, staging, leds, NUM_LEDS, blend_amount);
 
-        EVERY_N_MILLISECONDS(int((running_pattern->GetTime() * 1000) / 255)) {
+        // Adjust the blend amount of the second pattern into the first.
+        EVERY_N_MILLISECONDS(int((running_pattern->GetTime() * BLEND_TIME_MULTIPLIER) / 255)) {
             if (blend_amount < 255) {
                 blend_amount++;
             }
         }
-
-        EVERY_N_MILLISECONDS(500) {
-            if (playlist->GetTotalDelay() < next_pattern->GetDelay()) {
-                playlist->SetTotalDelay(playlist->GetTotalDelay() + 1);
-            } else if (playlist->GetTotalDelay() > next_pattern->GetDelay()) {
-                playlist->SetTotalDelay(playlist->GetTotalDelay() - 1);
+        
+        // delay drift so the delay between patterns changes over smoothly
+        EVERY_N_MILLISECONDS(DELAY_DRIFT) {
+            int total_delay = playlist->GetTotalDelay();
+            if (total_delay <= next_pattern->GetDelay()) {
+                playlist->SetTotalDelay(total_delay + 1);
+            } else {
+                playlist->SetTotalDelay(total_delay - 1);
             }
-        }
-    } else {
-        for (int i = 0; i < NUM_LEDS; i++) {
-            leds[i] = staging_a[i];
         }
     }
 
@@ -98,7 +104,8 @@ void loop()
     FastLED.delay(playlist->GetTotalDelay());
 
     EVERY_N_SECONDS_I(timer, running_pattern->GetTime()) {
-        start_blending = millis() + min((running_pattern->GetTime() * BLEND_TIME_MULTIPLIER), 20);
+        // reset blending for new pattern
+        start_blending = millis() + (running_pattern->GetTime() * (BLEND_TIME_MULTIPLIER / 3));
         blend_amount = 0;
         blending = false;
 

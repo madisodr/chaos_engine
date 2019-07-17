@@ -11,6 +11,7 @@ class BreathingRainbow : public Pattern
         ~BreathingRainbow();
 
         void Generate(CRGB* arr);
+        void Reset();
     private:
         byte m_delta = 255 / NUM_LEDS;
         uint8_t m_hue;
@@ -18,6 +19,7 @@ class BreathingRainbow : public Pattern
 
 BreathingRainbow::BreathingRainbow(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay) {}
 BreathingRainbow::~BreathingRainbow() {}
+inline void BreathingRainbow::Reset() {}
 
 void BreathingRainbow::Generate(CRGB* arr)
 {
@@ -28,9 +30,6 @@ void BreathingRainbow::Generate(CRGB* arr)
         arr[i] = hsv;
         hsv.hue += m_delta;
     }
-
-    
-    FastLED.setBrightness(20);
 }
 
 #endif // BREATHING_RAINBOW_H

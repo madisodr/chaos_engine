@@ -11,9 +11,10 @@ class Pattern
         ~Pattern();
 
         virtual void Generate(CRGB* arr);
+        virtual void Reset();
+        
         uint16_t GetDelay();
         uint16_t GetTime();
-        void Reset();
         void ToggleReverse();
     protected:
         void Breath(float _speed);
@@ -37,13 +38,6 @@ inline uint16_t Pattern::GetDelay()
 inline uint16_t Pattern::GetTime()
 {
     return m_time;
-}
-
-inline void Pattern::Reset()
-{
-    m_num_leds = 0;
-    m_pixel_count = random(4,8);
-    ToggleReverse();
 }
 
 void Pattern::Breath(float _speed)

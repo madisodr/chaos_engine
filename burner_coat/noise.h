@@ -17,6 +17,7 @@ class Noise : public Pattern
         void Generate(CRGB* arr);
         uint16_t XY(uint8_t x, uint8_t y);
         void MakeNoise();
+        void Reset();
 
         // The 16 bit version of̈ our coordinates. Should probably be private but
         static uint16_t x;
@@ -31,15 +32,18 @@ class Noise : public Pattern
         uint8_t m_speed;
 
         // Scale determines how far apart the pixels in our noise matrix are.
-        const static uint8_t scale = 50;
+        static uint8_t scale;
 
         // This is the array that we keep our computed noise values in
         uint8_t m_noise[m_max_dimension][m_max_dimension];
+
+        CRGB m_color;
 };
 
 uint16_t Noise::x;
 uint16_t Noise::y;
 uint16_t Noise::z;
+uint8_t Noise::scale;
 
 Noise::Noise(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
 {
@@ -47,10 +51,16 @@ Noise::Noise(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
     Noise::x = random16();
     Noise::y = random16();
     Noise::z = random16();
+    m_color = wheel(random(0, 255));
+    scale = 20;
 }
 
 Noise::~Noise() {}
 
+void Noise::Reset()
+{
+    m_color = wheel(random(0, 255));
+}
 //
 // Mark's xy coordinate mapping code.
 //
@@ -115,6 +125,7 @@ void Noise::Generate(CRGB* arr) {
 
     // generate noise data
     MakeNoise();
+    fadeToBlackBy(arr, NUM_LEDS, 100);
 
     for (int i = 0; i < m_matrix_width; i++) {
         for (int j = 0; j < m_matrix_height; j++) {
@@ -132,10 +143,15 @@ void Noise::Generate(CRGB* arr) {
                 bri = dim8_raw(bri * 2);
             }
 
-            CRGB color = ColorFromPalette(getCurrentPalette(), index, bri);
-            arr[modulo(XY(i, j), NUM_LEDS)] = color;
+            bri = constrain(bri, 0, MAX_BRIGHTNESS);
+
+            int ra = random(0, 16);
+            if (ra == 1) {
+                arr[modulo(XY(i, j), NUM_LEDS)] = m_color;
+            }
         }
     }
+    
 }
 
 #endif

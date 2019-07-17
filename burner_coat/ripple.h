@@ -13,6 +13,7 @@ class Ripple : public Pattern
         ~Ripple();
 
         void Generate(CRGB* arr);
+        void Reset();
     private:
         uint8_t m_color;
         uint8_t m_center;
@@ -31,6 +32,7 @@ Ripple::Ripple(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
 }
 
 Ripple::~Ripple() {}
+inline void Ripple::Reset() {}
 
 inline uint8_t Ripple::Wrap(uint8_t _step)
 {

@@ -10,6 +10,7 @@ class PatternName : public Pattern
         ~PatternName();
 
         void Generate(CRGB* arr);
+        void Reset();
     private:
 };
 
@@ -18,6 +19,8 @@ PatternName::PatternName(uint16_t _time, uint16_t _delay) : Pattern(_time, _dela
 PatternName::~PatternName() {}
 
 void PatternName::Generate(CRGB* arr) {}
+
+void PatternName::Reset() {}
 
 
 #endif // PATTERN_NAME_H

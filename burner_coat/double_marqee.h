@@ -23,8 +23,6 @@ DoubleMarqee::DoubleMarqee(uint16_t _time, uint16_t _delay) : Pattern(_time, _de
     m_hue = 0;
 }
 
-
-
 inline void DoubleMarqee::Reset()
 {
     m_num_leds = 0;
