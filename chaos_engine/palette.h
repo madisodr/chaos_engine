@@ -3,35 +3,16 @@
 
 #include "config.h"
 
-// Define a better Orange
-#define P_ORG 0xFF4500
-#define P_TRL 0x00F2FF
-
 // ID's for each palette in our program
 enum Palette_Ids {
     MIX,
     ORG
 };
 
-const TProgmemPalette16 orangePalette PROGMEM =
-{
-    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black,
-    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black,
-    CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black,
-    CRGB::Black, CRGB::Black, CRGB::Black, CRGB::Black
-};
-
-const TProgmemPalette16 mixedPalette PROGMEM =
-{
-    CRGB::Red, CRGB::Black, CRGB::Black, CRGB::Black,
-    CRGB::White, CRGB::Black, CRGB::Black, CRGB::Black,
-    CRGB::Purple, CRGB::Black, CRGB::Black, CRGB::Black,
-    P_ORG, CRGB::Black, CRGB::Black, CRGB::Black
-};
 
 static uint8_t palette_speed = 10;
 static uint8_t current_pattern = 0; // Index number of which pattern is current
-CRGBPalette16 current_palette(Rainbow_gp);
+CRGBPalette16 current_palette(LavaColors_p);
 CRGBPalette16 target_palette;
 
 void updatePalette()
@@ -41,11 +22,11 @@ void updatePalette()
     uint8_t second_hand = (millis() / 1000) % 60;
     static uint8_t last_second = 99;
 
-    const CRGBPalette16 palettes[] = {orangePalette};
+    const CRGBPalette16 palettes[] = {ForestColors_p, OceanColors_p, LavaColors_p};
 
     if (last_second != second_hand) {
         last_second = second_hand;
-#ifdef NOISE_H
+        
         if (0 == second_hand % 5) {
             second_hand < 30 ? palette_speed += speed_step : palette_speed -= speed_step;
         }
@@ -53,7 +34,6 @@ void updatePalette()
         if (0 == second_hand % 30) {
             palette_idx++;
         }
-#endif
 
         // wrap the palette index around to 0
         palette_idx %= ARRAY_SIZE(palettes);
@@ -66,7 +46,8 @@ inline CRGBPalette16 getCurrentPalette()
     return current_palette;
 }
 
-inline uint8_t GetCurrentSpeed() {
+inline uint8_t GetCurrentSpeed()
+{
     return palette_speed;
 }
 

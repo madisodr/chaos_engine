@@ -10,14 +10,14 @@ class Playlist
         Playlist(Pattern** _list, uint8_t _pattern_count);
         ~Playlist();
 
-        Pattern* GetCurrent();
-        Pattern* GetNext();
+        Pattern* GetCurrent() const;
+        Pattern* GetNext() const;
 
         void SetupNextPattern(bool random_pat);
-        Pattern* GetPattern(uint8_t index);
+        Pattern* GetPattern(uint8_t index) const;
         void SetCurrentPattern(Pattern* p);
-        uint8_t GetIndex(Pattern* p);
-        uint8_t GetTotalDelay();
+        uint8_t GetIndex(Pattern* p) const;
+        uint8_t GetTotalDelay() const;
         void SetTotalDelay(uint8_t total_delay);
 
     private:
@@ -42,21 +42,21 @@ Playlist::~Playlist()
         delete m_list[i];
     }
 
-    delete m_list;
+    delete[] m_list;
 }
 
 // returns currently playing pattern
-inline Pattern* Playlist::GetCurrent()
+inline Pattern* Playlist::GetCurrent() const
 {
     return m_current;
 }
 
-inline Pattern* Playlist::GetNext()
+inline Pattern* Playlist::GetNext() const
 {
     return m_next;
 }
 
-uint8_t Playlist::GetIndex(Pattern* p)
+uint8_t Playlist::GetIndex(Pattern* p) const
 {
     for (int i = 0; i < m_pattern_count; i++) {
         if (p == m_list[i]) {
@@ -81,7 +81,7 @@ void Playlist::SetupNextPattern(bool random_pat = false)
     m_next = m_list[idx];
 }
 
-inline Pattern* Playlist::GetPattern(uint8_t index)
+inline Pattern* Playlist::GetPattern(uint8_t index) const
 {
     return m_list[index];
 }
@@ -91,7 +91,7 @@ inline void Playlist::SetCurrentPattern(Pattern* p)
     m_current = p;
 }
 
-inline uint8_t Playlist::GetTotalDelay()
+inline uint8_t Playlist::GetTotalDelay() const
 {
     return m_total_delay;
 }

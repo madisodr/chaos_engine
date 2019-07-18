@@ -20,19 +20,19 @@ class Noise : public Pattern
         void Reset();
 
         // The 16 bit version of̈ our coordinates. Should probably be private but
-        static uint16_t x;
-        static uint16_t y;
-        static uint16_t z;
+        uint16_t m_x;
+        uint16_t m_y;
+        uint16_t m_z;
     private:
-        const static uint8_t m_matrix_width  = 10;
-        const static uint8_t m_matrix_height = 11;
-        const static int m_max_dimension = ((m_matrix_width > m_matrix_height) ? m_matrix_width : m_matrix_height);
+        static const uint8_t m_matrix_width  = 10;
+        static const uint8_t m_matrix_height = 11;
+        static const int m_max_dimension = ((m_matrix_width > m_matrix_height) ? m_matrix_width : m_matrix_height);
 
         // Speed of the pattern
         uint8_t m_speed;
 
         // Scale determines how far apart the pixels in our noise matrix are.
-        static uint8_t scale;
+        uint8_t m_scale;
 
         // This is the array that we keep our computed noise values in
         uint8_t m_noise[m_max_dimension][m_max_dimension];
@@ -40,19 +40,14 @@ class Noise : public Pattern
         CRGB m_color;
 };
 
-uint16_t Noise::x;
-uint16_t Noise::y;
-uint16_t Noise::z;
-uint8_t Noise::scale;
-
 Noise::Noise(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
 {
     m_speed = GetCurrentSpeed();
-    Noise::x = random16();
-    Noise::y = random16();
-    Noise::z = random16();
+    m_x = random16();
+    m_y = random16();
+    m_z = random16();
     m_color = wheel(random(0, 255));
-    scale = 20;
+    m_scale = 20;
 }
 
 Noise::~Noise() {}
@@ -86,11 +81,11 @@ void Noise::MakeNoise() {
     }
 
     for (int i = 0; i < m_max_dimension; i++) {
-        int ioffset = scale * i;
+        int ioffset = m_scale * i;
         for (int j = 0; j < m_max_dimension; j++) {
-            int joffset = scale * j * 4;
+            int joffset = m_scale * j * 4;
 
-            uint8_t data = inoise8(x + ioffset, y + joffset, z);
+            uint8_t data = inoise8(m_x + ioffset, m_y + joffset, m_z);
 
             // The range of the inoise8 function is roughly 16-238.
             // These two operations expand those values out to roughly 0..255
@@ -108,11 +103,11 @@ void Noise::MakeNoise() {
         }
     }
 
-    z += GetCurrentSpeed();
+    m_z += GetCurrentSpeed();
 
     // apply slow drift to X and Y, just for visual variation.
-    x += GetCurrentSpeed() / 8;
-    y -= GetCurrentSpeed() / 16;
+    m_x += GetCurrentSpeed() / 8;
+    m_y -= GetCurrentSpeed() / 16;
 }
 
 // heavily modified version of https://github.com/FastLED/FastLED/blob/master/examples/NoisePlusPalette/NoisePlusPalette.ino
@@ -125,6 +120,7 @@ void Noise::Generate(CRGB* arr) {
 
     // generate noise data
     MakeNoise();
+    
     fadeToBlackBy(arr, NUM_LEDS, 100);
 
     for (int i = 0; i < m_matrix_width; i++) {
@@ -151,7 +147,6 @@ void Noise::Generate(CRGB* arr) {
             }
         }
     }
-    
 }
 
 #endif

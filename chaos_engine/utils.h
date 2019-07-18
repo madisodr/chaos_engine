@@ -24,7 +24,8 @@ CRGB wheel(byte wheel_pos)
     return c;
 }
 
-inline int modulo(int x, int mod)
+/* wraps x around mod in both directions */
+inline int modulo(int x, const int mod)
 {
     if (x < 0)
         return mod - abs(x);

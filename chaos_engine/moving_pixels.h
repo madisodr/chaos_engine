@@ -18,13 +18,13 @@ class MovingPixels : public Pattern
 
 MovingPixels::MovingPixels(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
 {
-    m_pixel_count = 4;
+    m_pixel_count = random(4,12);
     m_pos = 0;
 }
 
 inline void MovingPixels::Reset()
 {
-    m_pixel_count = random(4,8);
+    m_pixel_count = random(4,12);
     ToggleReverse();
 }
 

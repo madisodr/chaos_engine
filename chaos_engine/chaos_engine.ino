@@ -5,28 +5,30 @@
 #include "playlist.h"
 
 #include "breathing_rainbow.h"
-// #include "chaos_engine.h"
+#include "fire.h"
 #include "confetti.h"
 #include "double_marqee.h"
 #include "moving_pixels.h"
-// #include "noise.h"
+#include "noise.h"
 #include "ripple.h"
 
 /* TODO Take these out of the global variable space somehow */
 DoubleMarqee* rainbow_marqee = new DoubleMarqee(PATTERN_LENGTH, 20);
 MovingPixels* pixels = new MovingPixels(PATTERN_LENGTH, 30);
-//Noise* noise = new Noise(PATTERN_LENGTH, 60);
-//ChaosEngine* chaos = new ChaosEngine(PATTERN_LENGTH, 20);
+Noise* noise = new Noise(PATTERN_LENGTH, 60);
 BreathingRainbow* breathing = new BreathingRainbow(PATTERN_LENGTH, 10);
 Confetti* confetti = new Confetti(PATTERN_LENGTH, 10);
 Ripple* ripple = new Ripple(PATTERN_LENGTH, 50);
+Fire* fire = new Fire(PATTERN_LENGTH, 0);
 
 Pattern* p_list[] = {
-    pixels,
-    breathing,
-    rainbow_marqee,
-    confetti,
-    ripple,
+    new Noise(PATTERN_LENGTH, 10),
+    new Fire(PATTERN_LENGTH, 0),
+    new MovingPixels(PATTERN_LENGTH, 30),
+    new BreathingRainbow(PATTERN_LENGTH, 10),
+    new DoubleMarqee(PATTERN_LENGTH, 20),
+    new Confetti(PATTERN_LENGTH, 10),
+    new Ripple(PATTERN_LENGTH, 50),
 };
 
 Playlist* playlist;
@@ -42,12 +44,10 @@ float blend_amount;
 uint16_t start_blending;
 bool blending;
 
-#define BLEND_TIME_MULTIPLIER 1000L / 4
-
 /* setup */
 void setup()
 {
-    LEDS.addLeds<WS2811, LED_PIN, GRB>(leds, NUM_LEDS);
+    LEDS.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
     randomSeed(analogRead(A1));
 
     // Set the maximum power the LEDs can pull
@@ -57,7 +57,7 @@ void setup()
 
     running_pattern = playlist->GetCurrent();
 
-    playlist->SetupNextPattern(true);
+    playlist->SetupNextPattern(false);
     next_pattern = playlist->GetNext();
     playlist->SetTotalDelay(running_pattern->GetDelay());
 
@@ -88,7 +88,7 @@ void loop()
                 blend_amount++;
             }
         }
-        
+
         // delay drift so the delay between patterns changes over smoothly
         EVERY_N_MILLISECONDS(DELAY_DRIFT) {
             int total_delay = playlist->GetTotalDelay();
@@ -109,7 +109,7 @@ void loop()
         blend_amount = 0;
         blending = false;
 
-        playlist->SetupNextPattern(true);
+        playlist->SetupNextPattern(false);
 
         running_pattern = next_pattern;
         playlist->SetCurrentPattern(next_pattern);
