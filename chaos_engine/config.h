@@ -11,7 +11,7 @@
 #define MAX_VOLTS 300
 
 // how long should each pattern run for in seconds
-#define PATTERN_LENGTH 60
+#define PATTERN_LENGTH 15
 
 // number of LEDs
 #define NUM_LEDS 106

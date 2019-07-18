@@ -6,7 +6,7 @@
 
 DEFINE_GRADIENT_PALETTE(bluemap) {
     50,    0,   0,   0,     //black
-    80,    255, 255, 244,   // teal
+    80,    0, 255, 244,   // teal
     100,   255, 0,   100,  // pink
     255,   255, 0,   100  // pink
 };

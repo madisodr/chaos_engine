@@ -12,23 +12,16 @@
 #include "noise.h"
 #include "ripple.h"
 
-/* TODO Take these out of the global variable space somehow */
-DoubleMarqee* rainbow_marqee = new DoubleMarqee(PATTERN_LENGTH, 20);
-MovingPixels* pixels = new MovingPixels(PATTERN_LENGTH, 30);
-Noise* noise = new Noise(PATTERN_LENGTH, 60);
-BreathingRainbow* breathing = new BreathingRainbow(PATTERN_LENGTH, 10);
-Confetti* confetti = new Confetti(PATTERN_LENGTH, 10);
-Ripple* ripple = new Ripple(PATTERN_LENGTH, 50);
-Fire* fire = new Fire(PATTERN_LENGTH, 0);
 
+/* lol. Ugly but whatever. If you want to add a pattern, add a pointer to it here. */
 Pattern* p_list[] = {
-    new Noise(PATTERN_LENGTH, 10),
-    new Fire(PATTERN_LENGTH, 0),
-    new MovingPixels(PATTERN_LENGTH, 30),
-    new BreathingRainbow(PATTERN_LENGTH, 10),
-    new DoubleMarqee(PATTERN_LENGTH, 20),
-    new Confetti(PATTERN_LENGTH, 10),
     new Ripple(PATTERN_LENGTH, 50),
+    //new Fire(PATTERN_LENGTH, 0),
+    new Noise(PATTERN_LENGTH, 60),
+    new MovingPixels(PATTERN_LENGTH, 40),
+    //new BreathingRainbow(PATTERN_LENGTH, 10),
+    //new DoubleMarqee(PATTERN_LENGTH, 20),
+    //new Confetti(PATTERN_LENGTH, 10),
 };
 
 Playlist* playlist;
@@ -115,6 +108,7 @@ void loop()
         playlist->SetCurrentPattern(next_pattern);
 
         next_pattern = playlist->GetNext();
+        next_pattern->Reset();
 
         // Update timer period to new pattern's length
         timer.setPeriod(running_pattern->GetTime());

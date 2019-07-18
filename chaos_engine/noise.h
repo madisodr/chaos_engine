@@ -47,7 +47,7 @@ Noise::Noise(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
     m_y = random16();
     m_z = random16();
     m_color = wheel(random(0, 255));
-    m_scale = 20;
+    m_scale = 50;
 }
 
 Noise::~Noise() {}
