@@ -29,7 +29,7 @@
 #define DELAY_DRIFT 500
 
 /**************************
- Avoid modifying these unless you know what it will effect.
+  Avoid modifying these unless you know what it will effect.
  **************************/
 
 #define STRIP_LENGTH (NUM_LEDS / 2)

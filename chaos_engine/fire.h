@@ -4,12 +4,11 @@
 #include <FastLED.h>
 #include "config.h"
 
-DEFINE_GRADIENT_PALETTE(bluemap) {
-    50,    0,   0,   0,     //black
-    80,    0, 255, 244,   // teal
-    100,   255, 0,   100,  // pink
-    255,   255, 0,   100  // pink
-};
+DEFINE_GRADIENT_PALETTE( heatmap_gp ) {
+  0,     0,  0,  0,   //black
+128,   255,  0,  0,   //red
+224,   255,255,  0,   //bright yellow
+255,   255,255,255 }; //full white
 
 class Fire : public Pattern
 {
@@ -28,9 +27,9 @@ class Fire : public Pattern
 
 Fire::Fire(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
 {
-    m_palette = bluemap;
-    m_xscale = 50;
-    m_yscale = 5;
+    m_palette = heatmap_gp;
+    m_xscale = 20;
+    m_yscale = 2;
     m_index = 0;
 }
 
@@ -48,12 +47,13 @@ void Fire::Generate(CRGB* arr)
         arr[l_idx] = ColorFromPalette(m_palette, min(i * (m_index) >> 6, 255), i * 255 / STRIP_LENGTH, LINEARBLEND);
         arr[r_idx] = ColorFromPalette(m_palette, min(i * (m_index) >> 6, 255), i * 255 / STRIP_LENGTH, LINEARBLEND);
     }
+
+    blur1d(arr, NUM_LEDS, .5);
 }
 
 void Fire::Reset()
 {
     m_index = 0;
 }
-
 
 #endif // PATTERN_NAME_H

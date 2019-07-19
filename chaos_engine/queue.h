@@ -48,7 +48,7 @@ inline int Queue<T>::back() const
     return m_back;
 }
 
-template<class T>
+    template<class T>
 void Queue<T>::Push(const T &item)
 {
     if (m_count < m_max_items) { // Drops out when full
@@ -61,7 +61,7 @@ void Queue<T>::Push(const T &item)
     }
 }
 
-template<class T>
+    template<class T>
 T Queue<T>::Pop()
 {
     if (m_count <= 0) {
@@ -90,7 +90,7 @@ T Queue<T>::Peek() const
     }
 }
 
-template<class T>
+    template<class T>
 void Queue<T>::Clear()
 {
     m_front = m_back;

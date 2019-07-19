@@ -1,3 +1,11 @@
+/*  
+ *   NOTICE~~~
+ *  
+ *  This is an old file that I haven't updated in a while.
+ *  Not sure if I will or want too since I don't use
+ *  palettes much anymore outside of noise.h 
+ */
+
 #ifndef PALETTE_H
 #define PALETTE_H
 
@@ -22,11 +30,11 @@ void updatePalette()
     uint8_t second_hand = (millis() / 1000) % 60;
     static uint8_t last_second = 99;
 
-    const CRGBPalette16 palettes[] = {ForestColors_p, OceanColors_p};
+    const CRGBPalette16 palettes[] = {OceanColors_p};
 
     if (last_second != second_hand) {
         last_second = second_hand;
-        
+
         EVERY_N_SECONDS(5) {
             (second_hand < 30) ? (palette_speed += speed_step) : (palette_speed -= speed_step);
         }
@@ -34,7 +42,7 @@ void updatePalette()
         EVERY_N_SECONDS(30) {
             palette_idx++;
         }
-        
+
         // wrap the palette index around to 0
         palette_idx %= ARRAY_SIZE(palettes);
         target_palette = palettes[palette_idx];

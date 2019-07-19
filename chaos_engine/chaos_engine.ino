@@ -14,12 +14,13 @@
 
 /* lol. Ugly but whatever. If you want to add a pattern, add a pointer to it here. */
 Pattern* p_list[] = {
+    new Noise(PATTERN_LENGTH, 60),
+    new DoubleMarqee(PATTERN_LENGTH, 20),
     new Fire(PATTERN_LENGTH, 0),
     new Ripple(PATTERN_LENGTH, 50),
     new Noise(PATTERN_LENGTH, 60),
     new MovingPixels(PATTERN_LENGTH, 40),
     new BreathingRainbow(PATTERN_LENGTH, 10),
-    new DoubleMarqee(PATTERN_LENGTH, 20),
     new Confetti(PATTERN_LENGTH, 10),
 };
 
@@ -39,7 +40,7 @@ bool blending;
 /* setup */
 void setup()
 {
-    LEDS.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
+    LEDS.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
     randomSeed(analogRead(A1));
 
     // Set the maximum power the LEDs can pull
@@ -49,7 +50,7 @@ void setup()
 
     running_pattern = playlist->GetCurrent();
 
-    playlist->SetupNextPattern(false);
+    playlist->SetupNextPattern(true);
     next_pattern = playlist->GetNext();
     playlist->SetTotalDelay(running_pattern->GetDelay());
 
@@ -101,7 +102,7 @@ void loop()
         blend_amount = 0;
         blending = false;
 
-        playlist->SetupNextPattern(false);
+        playlist->SetupNextPattern(true);
 
         running_pattern = next_pattern;
         playlist->SetCurrentPattern(next_pattern);

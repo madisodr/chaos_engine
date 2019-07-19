@@ -12,7 +12,7 @@ class Pattern
 
         virtual void Generate(CRGB* arr);
         virtual void Reset();
-        
+
         uint16_t GetDelay() const;
         uint16_t GetTime() const;
         void ToggleReverse();
@@ -40,7 +40,7 @@ inline uint16_t Pattern::GetTime() const
     return m_time;
 }
 
-void Pattern::Breath(float _speed) 
+void Pattern::Breath(float _speed)
 {
     float breath = (exp(sin(millis() / _speed * PI)) - 0.36787944) * 108.0;
     breath = map(breath, 0, MAX_BRIGHTNESS, 20, 80);

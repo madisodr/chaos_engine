@@ -33,7 +33,7 @@ MovingPixels::~MovingPixels() {}
 void MovingPixels::Generate(CRGB* arr)
 {
     fadeToBlackBy(arr, NUM_LEDS, 50);
-    
+
     uint8_t pixel_distance = NUM_LEDS / m_pixel_count;
 
     for (int i = 0; i < m_pixel_count; i++) {
@@ -45,7 +45,7 @@ void MovingPixels::Generate(CRGB* arr)
             arr[pos] = LED_COLOR_LOW;
         }
     }
-    
+
     if (m_reverse) {
         m_pos = modulo(m_pos - 1, NUM_LEDS);
     } else {

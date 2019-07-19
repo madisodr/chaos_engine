@@ -121,7 +121,7 @@ void Noise::Generate(CRGB* arr) {
     // generate noise data
     MakeNoise();
 
-    fadeToBlackBy(arr, NUM_LEDS, 100);
+    fadeToBlackBy(arr, NUM_LEDS, 10);
 
     for (int i = 0; i < m_matrix_width; i++) {
         for (int j = 0; j < m_matrix_height; j++) {
@@ -142,13 +142,6 @@ void Noise::Generate(CRGB* arr) {
             bri = constrain(bri, 0, MAX_BRIGHTNESS);
             CRGB color = ColorFromPalette(getCurrentPalette(), index, bri);
             arr[modulo(XY(i, j), NUM_LEDS)] = color;
-
-            /*
-            int ra = random(0, 16);
-            if (ra == 1) {
-                arr[modulo(XY(i, j), NUM_LEDS)] = m_color;
-            }
-            */
         }
     }
 }

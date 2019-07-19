@@ -16,13 +16,13 @@ class Ripple : public Pattern
         void Reset();
     private:
         uint8_t m_color;
-        int m_center;
-        int m_step;
+        int8_t m_center;
+        int8_t m_step;
         uint8_t m_max_steps;
         float m_fade_rate;
-        int m_diff;
+        int8_t m_diff;
 
-        int Wrap(int _step);
+        int8_t Wrap(int8_t _step);
 };
 
 Ripple::Ripple(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
@@ -36,7 +36,7 @@ Ripple::Ripple(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
 Ripple::~Ripple() {}
 inline void Ripple::Reset() {}
 
-inline int Ripple::Wrap(int _step)
+inline int8_t Ripple::Wrap(int8_t _step)
 {
     if (_step < 0) {
         return NUM_LEDS + _step;
@@ -59,7 +59,7 @@ void Ripple::Generate(CRGB* arr)
         } else {
             m_color = 130 + random8(10);
         }
-        
+
         m_step = 0;
     }
 
@@ -80,9 +80,7 @@ void Ripple::Generate(CRGB* arr)
         }
     }
 
-    //blur1d(arr, NUM_LEDS, .1);
-    
-    arr[0] = LED_COLOR_HIGH;
+    blur1d(arr, NUM_LEDS, .1);
 }
 
 #endif // RIPPLE_H
