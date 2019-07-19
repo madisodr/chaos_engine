@@ -16,13 +16,13 @@ class Ripple : public Pattern
         void Reset();
     private:
         uint8_t m_color;
-        uint8_t m_center;
-        uint8_t m_step;
+        int m_center;
+        int m_step;
         uint8_t m_max_steps;
         float m_fade_rate;
-        uint8_t m_diff;
+        int m_diff;
 
-        uint8_t Wrap(uint8_t _step);
+        int Wrap(int _step);
 };
 
 Ripple::Ripple(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
@@ -30,14 +30,13 @@ Ripple::Ripple(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
     m_center = 0;
     m_step = -1;
     m_max_steps = 20;
-    m_fade_rate = 0.9;
-    randomSeed(analogRead(A1));
+    m_fade_rate = 0.8;
 }
 
 Ripple::~Ripple() {}
 inline void Ripple::Reset() {}
 
-inline uint8_t Ripple::Wrap(uint8_t _step)
+inline int Ripple::Wrap(int _step)
 {
     if (_step < 0) {
         return NUM_LEDS + _step;
@@ -69,11 +68,11 @@ void Ripple::Generate(CRGB* arr)
         m_step++;
     } else {
         if (m_step < m_max_steps) {
-            arr[modulo(m_center + m_step, NUM_LEDS)] = CHSV(m_color, 255, pow(m_fade_rate, m_step) * MAX_BRIGHTNESS);
-            arr[modulo(m_center + m_step, NUM_LEDS)] = CHSV(m_color, 255, pow(m_fade_rate, m_step) * MAX_BRIGHTNESS);
+            arr[Wrap(m_center + m_step)] = CHSV(m_color, 255, pow(m_fade_rate, m_step) * MAX_BRIGHTNESS);
+            arr[Wrap(m_center - m_step)] = CHSV(m_color, 255, pow(m_fade_rate, m_step) * MAX_BRIGHTNESS);
             if (m_step > 3) {
-                arr[modulo(m_center + m_step, NUM_LEDS)] = CHSV(m_color, 255, pow(m_fade_rate, m_step - 2) * MAX_BRIGHTNESS);
-                arr[modulo(m_center + m_step, NUM_LEDS)] = CHSV(m_color, 255, pow(m_fade_rate, m_step - 2) * MAX_BRIGHTNESS);
+                arr[Wrap(m_center + m_step - 3)] = CHSV(m_color, 255, pow(m_fade_rate, m_step - 2) * MAX_BRIGHTNESS);
+                arr[Wrap(m_center - m_step + 3)] = CHSV(m_color, 255, pow(m_fade_rate, m_step - 2) * MAX_BRIGHTNESS);
             }
             m_step++;
         } else {

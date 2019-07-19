@@ -12,16 +12,15 @@
 #include "noise.h"
 #include "ripple.h"
 
-
 /* lol. Ugly but whatever. If you want to add a pattern, add a pointer to it here. */
 Pattern* p_list[] = {
+    new Fire(PATTERN_LENGTH, 0),
     new Ripple(PATTERN_LENGTH, 50),
-    //new Fire(PATTERN_LENGTH, 0),
     new Noise(PATTERN_LENGTH, 60),
     new MovingPixels(PATTERN_LENGTH, 40),
-    //new BreathingRainbow(PATTERN_LENGTH, 10),
-    //new DoubleMarqee(PATTERN_LENGTH, 20),
-    //new Confetti(PATTERN_LENGTH, 10),
+    new BreathingRainbow(PATTERN_LENGTH, 10),
+    new DoubleMarqee(PATTERN_LENGTH, 20),
+    new Confetti(PATTERN_LENGTH, 10),
 };
 
 Playlist* playlist;
