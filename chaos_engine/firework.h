@@ -45,7 +45,7 @@ class ChaosEngine : public Pattern
                 {
                     double now = millis() / 1000;
                     m_last_update = now;
-                    
+
                     double delta_time = now - m_last_update;
                     m_position += m_velocity * delta_time;
 
@@ -178,8 +178,8 @@ void ChaosEngine::Generate(CRGB* arr)
         int right = min(NUM_LEDS - 1, star->m_position + ParticleSize / 2);
 
         //for (int i = left; i < right; i++) {
-            arr[(uint32_t)star->m_position] = c;
-        
+        arr[(uint32_t)star->m_position] = c;
+
     }
 
     // Remove any particles who have completed their lifespan
@@ -187,9 +187,9 @@ void ChaosEngine::Generate(CRGB* arr)
     while (_Particles->getCount() > 0 && p->GetAge() > ParticleHoldTime +  ParticleIgnition + ParticleFadeTime) {
         _Particles->pop();
     }
-    
+
     arr[0] = LED_COLOR_HIGH;
-    arr[NUM_LEDS-1] = LED_COLOR_HIGH;
+    arr[NUM_LEDS - 1] = LED_COLOR_HIGH;
 }
 
 void ChaosEngine::Reset()
