@@ -69,8 +69,8 @@ void Playlist::SetupNextPattern(bool random_pat = false)
 {
     uint8_t idx = GetIndex(m_next);
     uint8_t curr = GetIndex(m_next);
-
-    if (random_pat) {
+    
+    if (m_pattern_count > 1 && random_pat) {
         do {
             idx = random8(m_pattern_count);
         } while (idx == curr);
@@ -91,12 +91,12 @@ inline void Playlist::SetCurrentPattern(Pattern* p)
     m_current = p;
 }
 
-inline uint8_t Playlist::GetTotalDelay() const
+uint8_t Playlist::GetTotalDelay() const
 {
     return m_total_delay;
 }
 
-inline void Playlist::SetTotalDelay(uint8_t total_delay)
+void Playlist::SetTotalDelay(uint8_t total_delay)
 {
     m_total_delay = total_delay;
 }

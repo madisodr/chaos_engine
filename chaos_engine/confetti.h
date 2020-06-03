@@ -3,6 +3,7 @@
 
 #include <FastLED.h>
 #include "config.h"
+#include "utils.h"
 
 class Confetti : public Pattern
 {
@@ -11,23 +12,19 @@ class Confetti : public Pattern
         ~Confetti();
         void Generate(CRGB* arr);
         void Reset();
+    private:
 };
 
 Confetti::Confetti(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay) {}
 Confetti::~Confetti() {}
-inline void Confetti::Reset() {}
+void Confetti::Reset() {}
 
 void Confetti::Generate(CRGB* arr)
 {
-    fadeToBlackBy(arr, NUM_LEDS, 30);
-
+    fadeToBlackBy(arr, NUM_LEDS, 60);
     uint8_t pos = random8(NUM_LEDS);
 
-    if (pos > LEFT_MID && pos <= RIGHT_MID) {
-        arr[pos] += LED_COLOR_HIGH;
-    } else {
-        arr[pos] += LED_COLOR_LOW;
-    }
+    arr[pos] = wheel(Pattern::GetGlobalHue());
 }
 
 #endif // CONFETTI_H

@@ -16,11 +16,13 @@ class DoubleMarqee : public Pattern
         void Reset();
     private:
         uint8_t m_hue;
+        uint8_t m_num_leds;
 };
 
 DoubleMarqee::DoubleMarqee(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
 {
     m_hue = 0;
+    m_num_leds = 0;
 }
 
 inline void DoubleMarqee::Reset()
@@ -37,6 +39,7 @@ void DoubleMarqee::Generate(CRGB* arr)
     m_hue++;
     CRGB color;
     for (uint8_t i = 0; i < STRIP_LENGTH; i++) {
+        
         if (i > m_num_leds) {
             continue;
         }
