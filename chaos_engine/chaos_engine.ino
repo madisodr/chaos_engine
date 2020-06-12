@@ -17,8 +17,8 @@ Pattern* p_list[] = {
     //new Confetti(PATTERN_LENGTH,60),
     //new Noise(PATTERN_LENGTH, 50),
     //new MovingPixels(PATTERN_LENGTH, 70),
-    new DoubleMarqee(PATTERN_LENGTH, 50),
-    //new ChaosEngine(PATTERN_LENGTH, 20),   
+    //new DoubleMarqee(PATTERN_LENGTH, 50),
+    new ChaosEngine(PATTERN_LENGTH, 20),   
 };
 
 Playlist* playlist;

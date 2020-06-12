@@ -1,8 +1,6 @@
 #include <FastLED.h>
 #include "config.h"
 
-#define NUM_SPARKS (NUM_LEDS / 2)
-
 #ifndef PACIFICA_H
 #define PACIFICA_H
 
