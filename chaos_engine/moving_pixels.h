@@ -40,7 +40,7 @@ void MovingPixels::Generate(CRGB* leds)
     for (int i = 0; i < m_pixel_count; i++) {
         int pos = modulo(m_pos + (pixel_distance * i), NUM_LEDS);
         
-        leds[pos] = Pattern::GetGlobalCHSV(255, MAX_BRIGHTNESS);
+        leds[pos] = Pattern::GetGlobalCHSV();
     }
 
     if (m_reverse) {

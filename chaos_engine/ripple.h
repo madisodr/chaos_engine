@@ -52,16 +52,16 @@ void Ripple::Generate(CRGB* arr)
     }
     
     if (m_step == 0) {
-        arr[m_center] = Pattern::GetGlobalCHSV(255, MAX_BRIGHTNESS);
+        arr[m_center] = Pattern::GetGlobalCHSV();
         m_step++;
     } else { 
         if (m_step < m_max_steps) {
             float bri = pow(m_fade_rate, m_step) * MAX_BRIGHTNESS;
-            arr[(m_center + m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCHSV(255, bri); // wheel(m_color)
-            arr[(m_center - m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCHSV(255, bri);
+            arr[(m_center + m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCHSV(bri); // wheel(m_color)
+            arr[(m_center - m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCHSV(bri);
     
-            arr[(m_center + (NUM_LEDS / random8(4)) + m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCHSV(255, bri);
-            arr[(m_center + (NUM_LEDS / random8(4)) - m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCHSV(255, bri);
+            arr[(m_center + (NUM_LEDS / random8(4)) + m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCHSV(bri);
+            arr[(m_center + (NUM_LEDS / random8(4)) - m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCHSV(bri);
             
             m_step++;
         } else {

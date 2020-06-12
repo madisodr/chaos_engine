@@ -5,7 +5,7 @@
 #include "playlist.h"
 
 #include "confetti.h"
-//#include "chaos_engine.h"
+#include "chaos_engine.h"
 #include "noise.h"
 #include "ripple.h"
 #include "moving_pixels.h"

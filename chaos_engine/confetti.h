@@ -24,7 +24,7 @@ void Confetti::Generate(CRGB* arr)
     fadeToBlackBy(arr, NUM_LEDS, 60);
     uint8_t pos = random8(NUM_LEDS);
 
-    arr[pos] = Pattern::GetGlobalCHSV(255, MAX_BRIGHTNESS);
+    arr[pos] = Pattern::GetGlobalCHSV();
 }
 
 #endif // CONFETTI_H
