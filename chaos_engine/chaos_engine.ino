@@ -5,7 +5,6 @@
 #include "playlist.h"
 
 #include "confetti.h"
-#include "chaos_engine.h"
 #include "noise.h"
 #include "ripple.h"
 #include "moving_pixels.h"
@@ -13,12 +12,11 @@
 
 /* lol. Ugly but whatever. If you want to add a pattern, add a pointer to it here. */
 Pattern* p_list[] = {
-    //new Ripple(PATTERN_LENGTH, 70),
-    //new Confetti(PATTERN_LENGTH,60),
-    //new Noise(PATTERN_LENGTH, 50),
-    //new MovingPixels(PATTERN_LENGTH, 70),
-    //new DoubleMarqee(PATTERN_LENGTH, 50),
-    new ChaosEngine(PATTERN_LENGTH, 20),   
+    new Ripple(PATTERN_LENGTH, 70),
+    new Confetti(PATTERN_LENGTH,60),
+    new Noise(PATTERN_LENGTH, 50),
+    new MovingPixels(PATTERN_LENGTH, 70),
+    new DoubleMarqee(PATTERN_LENGTH, 50),
 };
 
 Playlist* playlist;
