@@ -8,7 +8,7 @@
 #include "utils.h"
 
 #define NOISE_SPEED 40
-#define NOISE_SCALE 100
+#define NOISE_SCALE 70
 
 #define SPEED_STEP 2
 
@@ -84,14 +84,13 @@ void Noise::MakeNoise()
 }
 
 // heavily modified version of https://github.com/FastLED/FastLED/blob/master/examples/NoisePlusPalette/NoisePlusPalette.ino
-void Noise::Generate(CRGB* arr)
+void Noise::Generate(CRGB* leds)
 {
     UpdateSpeed();
 
     // generate noise data
     MakeNoise();
     
-    fadeToBlackBy(arr, NUM_LEDS, 60);
     for (int i = 0; i < NUM_LEDS; i++) {
         
         uint8_t index = m_noise[i];
@@ -105,8 +104,7 @@ void Noise::Generate(CRGB* arr)
             bri = dim8_raw(bri * 2);
         }
 
-        arr[i] = wheel(Pattern::GetGlobalHue());//, 255, bri);
-    
+        leds[i] = Pattern::GetGlobalCHSV(bri, 255, random8(8)); //CHSV(Pattern::GetGlobalHue() + random8(8), 255, bri);
     }
 }
 

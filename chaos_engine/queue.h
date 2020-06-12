@@ -1,4 +1,4 @@
-#ifdef QUEUE_H
+#ifndef QUEUE_H
 #define QUEUE_H
 
 template<class T>
@@ -24,6 +24,7 @@ class Queue
         T Peek();
         T Pop();
         void Clear();
+        T At(uint8_t at);
     private:
         int m_front, m_back, m_count;
         T *m_data;
@@ -31,19 +32,19 @@ class Queue
 };
 
 template<class T>
-inline int Queue<T>::Count() const
+inline int Queue<T>::Count()
 {
     return m_count;
 }
 
 template<class T>
-inline int Queue<T>::Front() const
+inline int Queue<T>::Front()
 {
     return m_front;
 }
 
 template<class T>
-inline int Queue<T>::back() const
+inline int Queue<T>::back()
 {
     return m_back;
 }
@@ -81,7 +82,7 @@ T Queue<T>::Pop()
 }
 
 template<class T>
-T Queue<T>::Peek() const
+T Queue<T>::Peek()
 {
     if (m_count <= 0) {
         return T();    // Returns empty
@@ -97,5 +98,14 @@ void Queue<T>::Clear()
     m_count = 0;
 }
 
-#endif // QUEUE_H
+template<class T>
+T Queue<T>::At(uint8_t at)
+{
+    if (at > m_count || m_count <= 0) {
+        return T(); // returns empty
+    } else {
+        return m_data[at];
+    }
+}
 
+#endif // QUEUE_H

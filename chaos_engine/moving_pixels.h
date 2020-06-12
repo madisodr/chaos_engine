@@ -31,16 +31,16 @@ inline void MovingPixels::Reset()
 
 MovingPixels::~MovingPixels() {}
 
-void MovingPixels::Generate(CRGB* arr)
+void MovingPixels::Generate(CRGB* leds)
 {
-    fadeToBlackBy(arr, NUM_LEDS, 128);
+    fadeToBlackBy(leds, NUM_LEDS, 128);
 
     uint8_t pixel_distance = NUM_LEDS / m_pixel_count;
 
     for (int i = 0; i < m_pixel_count; i++) {
         int pos = modulo(m_pos + (pixel_distance * i), NUM_LEDS);
         
-        arr[pos] = wheel(Pattern::GetGlobalHue());
+        leds[pos] = Pattern::GetGlobalCHSV();
     }
 
     if (m_reverse) {
