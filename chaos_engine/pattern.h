@@ -2,7 +2,8 @@
 #define PATTERN_H
 
 #include <FastLED.h>
-struct CRGB;
+#include "utils.h"
+
 
 class Pattern
 {
@@ -20,6 +21,7 @@ class Pattern
         static void UpdateGlobalHue();
         static uint8_t GetGlobalHue();
         static void SetGlobalHue(uint8_t _hue);
+        static CHSV GetGlobalCHSV(uint8_t saturation, uint8_t brightness, uint8_t adjust);
         
         static bool blending;
         static float blend_amount;
@@ -60,6 +62,11 @@ void Pattern::UpdateGlobalHue()
 uint8_t Pattern::GetGlobalHue()
 {
     return s_hue;
+}
+
+CHSV Pattern::GetGlobalCHSV(uint8_t saturation, uint8_t brightness, uint8_t shift = 0)
+{
+    return CHSV(s_hue, 255, brightness);
 }
 
 void Pattern::SetGlobalHue(uint8_t _hue)

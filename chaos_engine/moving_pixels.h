@@ -31,7 +31,7 @@ inline void MovingPixels::Reset()
 
 MovingPixels::~MovingPixels() {}
 
-void MovingPixels::Generate(CRGB* arr)
+void MovingPixels::Generate(CRGB* leds)
 {
     fadeToBlackBy(arr, NUM_LEDS, 128);
 
@@ -40,7 +40,7 @@ void MovingPixels::Generate(CRGB* arr)
     for (int i = 0; i < m_pixel_count; i++) {
         int pos = modulo(m_pos + (pixel_distance * i), NUM_LEDS);
         
-        arr[pos] = wheel(Pattern::GetGlobalHue());
+        leds[pos] = Pattern::GetGlobalCHSV(255, MAX_BRIGHTNESS);
     }
 
     if (m_reverse) {

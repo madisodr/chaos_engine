@@ -21,13 +21,13 @@ BreathingRainbow::BreathingRainbow(uint16_t _time, uint16_t _delay) : Pattern(_t
 BreathingRainbow::~BreathingRainbow() {}
 inline void BreathingRainbow::Reset() {}
 
-void BreathingRainbow::Generate(CRGB* arr)
+void BreathingRainbow::Generate(CRGB* leds)
 {
     m_hue++;
 
     CHSV hsv = CHSV(m_hue, 255, 255);
     for (int i = 0; i < NUM_LEDS; i++) {
-        arr[i] = hsv;
+        leds[i] = hsv;
         hsv.hue += m_delta;
     }
 }

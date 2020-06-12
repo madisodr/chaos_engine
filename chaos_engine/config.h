@@ -8,11 +8,11 @@
 #define MAX_BRIGHTNESS 255
 
 // maximum voltage FastLED will draw. Keeps power draw low.
-#define MAX_VOLTS 200
+#define MAX_VOLTS 500
 
 // how long should each pattern runs for
 // Seconds
-#define PATTERN_LENGTH 30
+#define PATTERN_LENGTH  20
 
 // number of LEDs
 #define NUM_LEDS 106 //120
