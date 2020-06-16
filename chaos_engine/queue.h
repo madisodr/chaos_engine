@@ -91,7 +91,7 @@ T Queue<T>::Peek()
     }
 }
 
-    template<class T>
+template<class T>
 void Queue<T>::Clear()
 {
     m_front = m_back;
@@ -102,7 +102,7 @@ template<class T>
 T Queue<T>::At(uint8_t at)
 {
     if (at > m_count || m_count <= 0) {
-        return T(); // returns empty
+        return NULL; // returns empty
     } else {
         return m_data[at];
     }
