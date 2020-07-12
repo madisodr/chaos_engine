@@ -12,11 +12,11 @@
 
 /* lol. Ugly but whatever. If you want to add a pattern, add a pointer to it here. */
 Pattern* p_list[] = {
-    new Ripple(PATTERN_LENGTH, 70),
-    new Confetti(PATTERN_LENGTH,60),
-    new Noise(PATTERN_LENGTH, 50),
     new MovingPixels(PATTERN_LENGTH, 70),
-    new DoubleMarqee(PATTERN_LENGTH, 50),
+    new Ripple(PATTERN_LENGTH, 70),
+    //new Confetti(PATTERN_LENGTH,60),
+    //new Noise(PATTERN_LENGTH, 50),
+    //new DoubleMarqee(PATTERN_LENGTH, 50),
 };
 
 Playlist* playlist;
@@ -54,6 +54,8 @@ void loop()
     Pattern* next_pattern = playlist->GetNext();
     // generate the current pattern
     running_pattern->Generate(leds);
+
+    // TODO chaos_engine->Glitch(leds); Make the chaos engine glitch thingy!
 
     EVERY_N_MILLISECONDS(1000) {
         Pattern::UpdateGlobalHue();

@@ -14,6 +14,10 @@ class Pattern
         virtual void Generate(CRGB* arr);
         virtual void Reset();
 
+        // TODO Write a cleanup method that gets called when a pattern is no longer
+        // in use.
+        // virtual void Cleanup();
+
         uint16_t GetDelay() const;
         uint16_t GetTime() const;
         void ToggleReverse();

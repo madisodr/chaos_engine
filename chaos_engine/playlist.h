@@ -4,6 +4,8 @@
 #include "pattern.h"
 #include "utils.h"
 
+// TODO Rewrite this to use queue.h
+
 class Playlist
 {
     public:
