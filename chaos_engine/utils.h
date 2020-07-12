@@ -35,4 +35,11 @@ inline int modulo(int x, const int mod)
         return x;
 }
 
+// return a random double between 0.0 and 1.0    
+float RandomFloat() 
+{   
+    return (float) (random(1,101) / (float) 100.0); 
+}
+
+
 #endif

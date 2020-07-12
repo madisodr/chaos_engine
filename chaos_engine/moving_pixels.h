@@ -5,6 +5,7 @@
 #include "config.h"
 #include <QueueList.h>
 
+#define MAX_PIXELS 5
 
 class Pixel
 {
@@ -31,12 +32,6 @@ void Pixel::Update()
     m_reverse == true ? m_pos-- : m_pos++;
 }
 
-// return a random double between 0.0 and 1.0    
-float RandomFloat() 
-{   
-    return (float) random(101) / (float) 100.0; 
-}
-
 class MovingPixels : public Pattern
 {
     public:
@@ -51,19 +46,17 @@ class MovingPixels : public Pattern
         QueueList<Pixel*> m_pixels;
 };
 
-#define MAX_PIXELS 5
-
 MovingPixels::MovingPixels(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
 {
-    m_pixel_freq = 0.3;
+    m_pixel_freq = 0.05;
 }
 
 void MovingPixels::Reset() 
 {
     // Make sure we clear this out on reset. This should happen in a "cleanup"
     // stage after this pattern finishes, not before it starts again.
-     for (int i = 0; i < m_pixels.count(); i++) {
-        delete m_pixels[i];
+     while (!m_pixels.isEmpty()) {
+        delete m_pixels.pop();
      }
 }
 
@@ -80,17 +73,21 @@ void MovingPixels::Generate(CRGB* leds)
     
     for (int i = 0; i < m_pixels.count(); i++) {
         Pixel* p = m_pixels[i];
-        if (p == NULL) { break; }
+        
+        if (p == NULL) { 
+            break; 
+        }
+        
         p->Update();
         
-        if (p->m_pos <= 0 || p->m_pos >= NUM_LEDS) {
+        if (p->m_pos < 0 || p->m_pos >= NUM_LEDS) {
             p->m_mark_for_cleanup = true;
         } else {
             leds[p->m_pos] = Pattern::GetGlobalCHSV();
         }
     }
-
-    while (m_pixels.count() > 0 && m_pixels.peek()->m_mark_for_cleanup == true) {
+    
+    while (!m_pixels.isEmpty() && m_pixels.peek()->m_mark_for_cleanup) {
         m_pixels.pop();
     }
 }
