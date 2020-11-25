@@ -8,11 +8,11 @@
 #define MAX_BRIGHTNESS 255
 
 // maximum voltage FastLED will draw. Keeps power draw low.
-#define MAX_VOLTS 200
+#define MAX_VOLTS 300
 
 // how long should each pattern runs for
 // Seconds
-#define PATTERN_LENGTH  20
+#define PATTERN_LENGTH  60
 
 // number of LEDs
 #define NUM_LEDS 120
@@ -27,7 +27,7 @@
 
 // how fast should the delay increase or decrease during pattern switches
 // a smaller number means the delay will drift faster.
-#define DELAY_DRIFT 500
+#define DELAY_DRIFT 1000
 
 /**************************
   Avoid modifying these unless you know what it will effect.

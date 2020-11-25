@@ -1,4 +1,5 @@
-#include <FastLED.h>
+ #include <FastLED.h>
+ 
 #include "config.h"
 
 #include "pattern.h"
@@ -10,13 +11,12 @@
 #include "moving_pixels.h"
 #include "double_marqee.h"
 
-/* lol. Ugly but whatever. If you want to add a pattern, add a pointer to it here. */
-Pattern* p_list[] = {
+Pattern* pattern_list[] = {
     new MovingPixels(PATTERN_LENGTH, 70),
     new Ripple(PATTERN_LENGTH, 70),
-    //new Confetti(PATTERN_LENGTH,60),
-    //new Noise(PATTERN_LENGTH, 50),
-    //new DoubleMarqee(PATTERN_LENGTH, 50),
+    new Confetti(PATTERN_LENGTH,60),
+    new Noise(PATTERN_LENGTH, 50),
+    new DoubleMarqee(PATTERN_LENGTH, 50),
 };
 
 Playlist* playlist;
@@ -37,8 +37,8 @@ void setup()
 
     // Set the maximum power the LEDs can pull
     FastLED.setMaxPowerInVoltsAndMilliamps(5, MAX_VOLTS);
-
-    playlist = new Playlist(p_list, ARRAY_SIZE(p_list));
+    
+    playlist = new Playlist(pattern_list, ARRAY_SIZE(pattern_list));
     playlist->SetupNextPattern(true);
     playlist->SetTotalDelay(playlist->GetCurrent()->GetDelay());
 

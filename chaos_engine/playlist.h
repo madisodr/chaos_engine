@@ -4,24 +4,22 @@
 #include "pattern.h"
 #include "utils.h"
 
-// TODO Rewrite this to use queue.h
-
 class Playlist
 {
     public:
         Playlist(Pattern** _list, uint8_t _pattern_count);
         ~Playlist();
 
-        Pattern* GetCurrent() const;
-        Pattern* GetNext() const;
-
         void SetupNextPattern(bool random_pat);
+        uint8_t GetRandomIndex();
         Pattern* GetPattern(uint8_t index) const;
         void SetCurrentPattern(Pattern* p);
         uint8_t GetIndex(Pattern* p) const;
         uint8_t GetTotalDelay() const;
         void SetTotalDelay(uint8_t total_delay);
-
+        
+        Pattern* GetCurrent() const;
+        Pattern* GetNext() const;
     private:
         Pattern** m_list;
         Pattern* m_current;
@@ -69,18 +67,20 @@ uint8_t Playlist::GetIndex(Pattern* p) const
 
 void Playlist::SetupNextPattern(bool random_pat = false)
 {
-    uint8_t idx = GetIndex(m_next);
-    uint8_t curr = GetIndex(m_next);
-    
-    if (m_pattern_count > 1 && random_pat) {
-        do {
-            idx = random8(m_pattern_count);
-        } while (idx == curr);
-    } else {
-        idx = modulo(idx + 1, m_pattern_count);
-    }
-
+    uint8_t idx = (random_pat ? GetRandomIndex() : modulo(idx + 1, m_pattern_count)); 
     m_next = m_list[idx];
+}
+
+uint8_t Playlist::GetRandomIndex()
+{
+    uint8_t next_index;
+    uint8_t curr_index = GetIndex(m_current);
+    
+    do { 
+        next_index = random8(m_pattern_count);
+    } while (next_index == curr_index);
+
+    return next_index;
 }
 
 inline Pattern* Playlist::GetPattern(uint8_t index) const
