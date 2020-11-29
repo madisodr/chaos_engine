@@ -9,7 +9,7 @@ class PatternName : public Pattern
         PatternName(uint16_t _time, uint16_t _delay);
         ~PatternName();
 
-        void Generate(CRGB* arr);
+        void Generate(CRGB* leds);
         void Reset();
     private:
 };
@@ -18,7 +18,7 @@ PatternName::PatternName(uint16_t _time, uint16_t _delay) : Pattern(_time, _dela
 
 PatternName::~PatternName() {}
 
-void PatternName::Generate(CRGB* arr) {}
+void PatternName::Generate(CRGB* leds) {}
 
 void PatternName::Reset() {}
 

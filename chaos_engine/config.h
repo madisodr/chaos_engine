@@ -5,17 +5,17 @@
 #define LED_PIN 3
 
 // maximum birghtness the LEDs can shine at.
-#define MAX_BRIGHTNESS 255
+#define MAX_BRIGHTNESS 50
 
 // maximum voltage FastLED will draw. Keeps power draw low.
-#define MAX_VOLTS 300
+#define MAX_VOLTS 100
 
 // how long should each pattern runs for
 // Seconds
-#define PATTERN_LENGTH  60
+#define PATTERN_LENGTH  20
 
 // number of LEDs
-#define NUM_LEDS 120
+#define NUM_LEDS 60
 
 // used for making patterns symetrical. Since the 0th pixel on my LED strip wasn't
 // in the center of my coat, I had to offset where the 0th' pixel of my LED strip is.

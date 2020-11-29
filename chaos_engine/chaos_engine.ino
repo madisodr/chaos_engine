@@ -10,12 +10,16 @@
 #include "ripple.h"
 #include "moving_pixels.h"
 #include "double_marqee.h"
+#include "helios.h"
+#include "pacifica.h"
 
 Pattern* pattern_list[] = {
-    new MovingPixels(PATTERN_LENGTH, 70),
-    new Ripple(PATTERN_LENGTH, 70),
-    new Confetti(PATTERN_LENGTH,60),
-    new Noise(PATTERN_LENGTH, 50),
+    //new Pacifica(PATTERN_LENGTH, 50),
+    //new Helios(PATTERN_LENGTH, 30),
+    //new Ripple(PATTERN_LENGTH, 70),
+    //new Confetti(PATTERN_LENGTH,60),
+    //new MovingPixels(PATTERN_LENGTH, 70),
+    //new Noise(PATTERN_LENGTH, 50),
     new DoubleMarqee(PATTERN_LENGTH, 50),
 };
 
@@ -31,7 +35,7 @@ uint16_t start_blending;
 void setup()
 {
     LEDS.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
-    randomSeed(analogRead(1));
+    randomSeed(analogRead(0));
     
     Pattern::SetGlobalHue(random8(255));
 
@@ -53,11 +57,9 @@ void loop()
     Pattern* running_pattern = playlist->GetCurrent();
     Pattern* next_pattern = playlist->GetNext();
     // generate the current pattern
-    running_pattern->Generate(leds);
+    running_pattern->Generate(leds); 
 
-    // TODO chaos_engine->Glitch(leds); Make the chaos engine glitch thingy!
-
-    EVERY_N_MILLISECONDS(1000) {
+    EVERY_N_MILLISECONDS(500) {
         Pattern::UpdateGlobalHue();
     }
 
@@ -88,7 +90,9 @@ void loop()
             }
         }
     }
-
+    
+    //Pattern::Glitch(leds);
+    
     FastLED.show();
     FastLED.delay(playlist->GetTotalDelay());
   

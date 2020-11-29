@@ -46,7 +46,7 @@ void Pacifica::Generate(CRGB* leds)
         sCIStart4 -= (deltams2 * beatsin88(257,4,6));
         
         // Clear out the LED array to a dim background blue-green
-        fill_solid( leds, NUM_LEDS, CRGB( 2, 6, 10));
+        fill_solid( leds, NUM_LEDS, Pattern::GetGlobalCHSV(255));
         
         // Render each of four layers, with different scales and speeds, that vary over time
         AddLayer(leds, sCIStart1, beatsin16( 3, 11 * 256, 14 * 256), beatsin8( 10, 70, 130), 0-beat16( 301) );
