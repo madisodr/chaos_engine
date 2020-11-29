@@ -42,13 +42,13 @@ class MovingPixels : public Pattern
         int8_t FindFirstStoppedPixel();
     private:
         uint8_t m_pixel_count;
-        float m_pixel_freq;
+        uint8_t m_pixel_freq;
         Pixel* m_pixels[MAX_PIXELS] ;
 };
 
 MovingPixels::MovingPixels(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
 {
-    m_pixel_freq = 0.05;
+    m_pixel_freq = 26; // 10%
     for (int i = 0; i < MAX_PIXELS; i++) {
         m_pixels[i] = new Pixel((random() % 2));
     }
@@ -76,7 +76,7 @@ void MovingPixels::Generate(CRGB* leds)
     fadeToBlackBy(leds, NUM_LEDS, 64);
 
     int new_pixel_index = FindFirstStoppedPixel();
-    if (new_pixel_index != -1 && (RandomFloat() < m_pixel_freq)) {
+    if (new_pixel_index != -1 && (random(255) < m_pixel_freq)) {
         Pixel* p = m_pixels[new_pixel_index];
         
         if (p != NULL) {

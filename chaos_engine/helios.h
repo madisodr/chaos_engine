@@ -12,11 +12,10 @@ class Helios : public Pattern
         void Generate(CRGB* arr);
         void Reset();
         void CreateHeliosBuffer(bool* buffer);
-
+    private:
         int offset;
         bool forward_buffer[NUM_LEDS];
         bool reverse_buffer[NUM_LEDS];
-    private:
 };
 
 Helios::Helios(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
@@ -43,13 +42,13 @@ void Helios::Generate(CRGB* leds)
 
         if (forward) {
             int b = random(MAX_BRIGHTNESS);
-            color = Pattern::GetGlobalCHSV(b, 255);
+            color = Pattern::GetGlobalCHSV(b);
             leds[i] = color;
         }
 
         if (reverse) {
             int b = random(MAX_BRIGHTNESS);
-            color = Pattern::GetGlobalCHSV(b, 255);
+            color = Pattern::GetGlobalCHSV(b);
             leds[i] = color;
         }
     }

@@ -4,7 +4,6 @@
 #include <FastLED.h>
 #include "utils.h"
 
-
 class Pattern
 {
     public:
@@ -27,9 +26,6 @@ class Pattern
         static void SetGlobalHue(uint8_t _hue);
         static CHSV GetGlobalCHSV(uint8_t brightness, uint8_t saturation, uint8_t shift);
 
-        static bool blending;
-        static float blend_amount;
-
         static void Glitch(CRGB* leds);
         static void ResetGlitch();
 
@@ -47,14 +43,12 @@ class Pattern
         static uint8_t s_hue;
 };
 
-bool Pattern::blending = false;
-uint8_t Pattern::s_hue = random8(255);
-float Pattern::blend_amount = 0.0;
+uint8_t Pattern::s_hue;
 
 bool Pattern::m_isGlitching = false;
 uint32_t Pattern::m_nextGlitch = random(20);
-uint8_t Pattern::m_glitchFrames = random8(1, 10);
-uint8_t Pattern::m_glitchStrip = random8(100);
+uint8_t Pattern::m_glitchFrames = random(1, 10);
+uint8_t Pattern::m_glitchStrip = random(100);
 uint32_t Pattern::m_frame = 0;
 
 Pattern::Pattern(uint16_t _time, uint16_t _delay) : m_time(_time), m_delay(_delay), m_reverse(false)

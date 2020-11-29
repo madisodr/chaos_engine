@@ -13,26 +13,18 @@ class Confetti : public Pattern
         void Generate(CRGB* arr);
         void Reset();
     private:
-        uint8_t m_last_pos;
 };
 
-Confetti::Confetti(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay) 
-{
-     m_last_pos = random8(NUM_LEDS);
-}
-
+Confetti::Confetti(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay) {}
 Confetti::~Confetti() {}
+
 void Confetti::Reset() {}
 
-void Confetti::Generate(CRGB* arr)
+void Confetti::Generate(CRGB* leds)
 {
-    fadeToBlackBy(arr, NUM_LEDS, 60);
-    
-    arr[m_last_pos] = Pattern::GetGlobalCHSV(50);
+    fadeToBlackBy(leds, NUM_LEDS, 60);
     uint8_t pos = random8(NUM_LEDS);
-
-    arr[pos] = Pattern::GetGlobalCHSV();
-    m_last_pos = pos;
+    leds[pos] = Pattern::GetGlobalCHSV();
 }
 
 #endif // CONFETTI_H
