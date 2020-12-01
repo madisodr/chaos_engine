@@ -104,7 +104,7 @@ void Noise::Generate(CRGB* leds)
             bri = dim8_raw(bri * 2);
         }
 
-        leds[i] = Pattern::GetGlobalCHSV(bri, 255, random8(16)); //CHSV(Pattern::GetGlobalHue() + random8(8), 255, bri);
+        leds[i] = GetGlobalCRGB(random(64)); //CHSV(Pattern::GetGlobalHue() + random8(8), 255, bri);
     }
 }
 

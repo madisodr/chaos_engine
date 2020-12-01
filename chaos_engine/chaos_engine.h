@@ -19,20 +19,20 @@ class ChaosEngine
     ChaosEngine();
     ~ChaosEngine();
 
-    void Update(CRGB* current_pattern);
+    void Start();
 
+    void Update(CRGB* current_pattern);
     void UpdateDelay();
     uint16_t GetTotalDelay();
 
-    
-    void Start();
+    enum PatternIDs { HELIOS, RIPPLE, PACIFICA, CONFETTI, PIXELS, NOISE, DOUBLEMARQEE };
     
     void RegisterPattern(uint8_t i);
     Pattern* GetRunningPattern();
     void SetupNextPattern();
 
-    enum PatternIDs { HELIOS, RIPPLE, PACIFICA, CONFETTI, PIXELS, NOISE, DOUBLEMARQEE };
-    
+    void Glitch(CRGB* leds);
+    void ResetGlitch();
   private:
     uint8_t m_total_delay;
     
@@ -47,6 +47,12 @@ class ChaosEngine
  
     CRGB m_blending_pattern[NUM_LEDS];
     
+    bool m_glitching_enabled;
+    bool m_is_glitching;
+    uint32_t m_next_glitch;
+    uint8_t m_glitch_frames;
+    // uint8_t m_glitchStrip;
+    uint32_t m_frame;
 };
 
 ChaosEngine::ChaosEngine() 
@@ -54,9 +60,29 @@ ChaosEngine::ChaosEngine()
     m_is_blending = false;
     m_blend_amount = 0.0;
     m_patterns.setStorage(pattern_storage);
+    
+    if (CONFIG_GLITCHING_ENABLED) {
+        m_glitching_enabled = true;
+    }
+        
+    m_is_glitching = false;
+    m_next_glitch = random8(100);
+    m_glitch_frames = random8(1, 10);
+    m_frame = 0;
 }
 
-void ChaosEngine::Update(CRGB* current_pattern)
+void ChaosEngine::Start()
+{   
+    // m_curr_pattern = m_patterns[random(m_patterns.size())];
+    m_curr_pattern = m_patterns[0];
+    
+    m_total_delay = m_curr_pattern->GetDelay();
+    SetupNextPattern();
+    Pattern::SetGlobalHue(random(255));
+    m_start_blending_timer = millis() + (m_curr_pattern->GetTime() * BLEND_TIME_MULTIPLIER);
+}
+
+void ChaosEngine::Update(CRGB* leds)
 {
     EVERY_N_MILLISECONDS(500) {
         Pattern::UpdateGlobalHue();
@@ -69,12 +95,12 @@ void ChaosEngine::Update(CRGB* current_pattern)
     if (m_is_blending && m_next_pattern != NULL) {
         // generate and blend the next pattern into the original
         m_next_pattern->Generate(m_blending_pattern);
-        blend(current_pattern, m_blending_pattern, current_pattern, NUM_LEDS, m_blend_amount);
+        blend(leds, m_blending_pattern, leds, NUM_LEDS, m_blend_amount);
 
         // Adjust the blend amount of the second pattern into the first.
         EVERY_N_MILLISECONDS(int((m_curr_pattern->GetTime() * BLEND_TIME_MULTIPLIER) / 255)) {
             if (m_blend_amount < 255) {
-                m_blend_amount += 1.0;
+                m_blend_amount++;
             }
         }
 
@@ -96,6 +122,11 @@ void ChaosEngine::Update(CRGB* current_pattern)
         // Update timer period to new pattern's length
         timer.setPeriod(m_curr_pattern->GetTime());
     }
+
+    if (m_glitching_enabled) {
+        Glitch(leds);
+        m_frame++;
+    }
 }
 
 uint16_t ChaosEngine::GetTotalDelay()
@@ -106,15 +137,11 @@ uint16_t ChaosEngine::GetTotalDelay()
 void ChaosEngine::UpdateDelay()
 {
     if (m_total_delay != m_next_pattern->GetDelay()) {
-        if (m_total_delay < m_next_pattern->GetDelay()) {
-            m_total_delay++;
-        } else {
-            m_total_delay--;
-        }
+        m_total_delay < m_next_pattern->GetDelay() ? m_total_delay++ : m_total_delay--;
     }
 }
 
-void ChaosEngine::RegisterPattern(uint8_t pattern_id)
+void ChaosEngine::RegisterPattern(const uint8_t pattern_id)
 {
     if (m_patterns.size() > m_patterns.max_size()) {
         return;
@@ -149,7 +176,6 @@ void ChaosEngine::RegisterPattern(uint8_t pattern_id)
     if (p != NULL) {
         m_patterns.push_back(p);
     }
-    
 }
 
 void ChaosEngine::SetupNextPattern()
@@ -164,11 +190,32 @@ Pattern* ChaosEngine::GetRunningPattern()
     return m_curr_pattern;
 }
 
-void ChaosEngine::Start()
-{   
-    m_curr_pattern = m_patterns[random(m_patterns.size())];
-    m_total_delay = m_curr_pattern->GetDelay();
-    SetupNextPattern();
-    Pattern::SetGlobalHue(random());
-    m_start_blending_timer = millis() + (m_curr_pattern->GetTime() * BLEND_TIME_MULTIPLIER);
+void ChaosEngine::ResetGlitch()
+{
+    m_next_glitch = m_frame + random(60);
+    m_glitch_frames = random(40);
+    m_is_glitching = false;
+}
+
+// Random strip flicker
+void ChaosEngine::Glitch(CRGB* leds)
+{
+    if (m_frame >= m_next_glitch) {
+        m_is_glitching = true;
+    }
+
+    if (m_is_glitching) {
+        int shift = random(32);
+        if (m_frame >= m_next_glitch && m_frame < m_next_glitch + m_glitch_frames) {
+            int start = random(NUM_LEDS); // * m_glitchStrip;
+            int led_count = random(NUM_LEDS / 2);
+            for (int i = start; i < start + led_count; ++i) {
+                if (random(100) < 40) {
+                    leds[i % NUM_LEDS] = Pattern::GetGlobalCRGB(shift);
+                }
+            }
+        } else if (m_frame >= m_next_glitch + m_glitch_frames) {
+            ResetGlitch();
+        }
+    }
 }

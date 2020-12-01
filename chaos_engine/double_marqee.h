@@ -50,19 +50,19 @@ void DoubleMarqee::Generate(CRGB* arr)
             color = wheel(((i * 256 / (STRIP_LENGTH)) + m_hue) & 255);
         }
 
-        uint8_t l_idx = modulo(LEFT_TOP - i, NUM_LEDS);
+        uint8_t l_idx = modulo(STRIP_LENGTH - i, NUM_LEDS);
         arr[l_idx] = color;
 
-        uint8_t r_idx = modulo(RIGHT_TOP + i, NUM_LEDS);
+        uint8_t r_idx = modulo((STRIP_LENGTH + i, NUM_LEDS);
         arr[r_idx] = color;
-    }
-
-    EVERY_N_MILLISECONDS(100) {
-        m_num_leds += 1;
     }
 
     if (m_num_leds >= NUM_LEDS) {
         m_num_leds = NUM_LEDS;
+    } else {
+        EVERY_N_MILLISECONDS(100) {
+            m_num_leds += 1;
+        }
     }
 }
 

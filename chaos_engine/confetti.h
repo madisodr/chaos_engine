@@ -23,8 +23,7 @@ void Confetti::Reset() {}
 void Confetti::Generate(CRGB* leds)
 {
     fadeToBlackBy(leds, NUM_LEDS, 60);
-    uint8_t pos = random8(NUM_LEDS);
-    leds[pos] = Pattern::GetGlobalCHSV();
+    leds[random8(NUM_LEDS)] = Pattern::GetGlobalCRGB();
 }
 
 #endif // CONFETTI_H

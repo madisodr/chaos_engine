@@ -1,20 +1,21 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// default led pin for arduino boards
-#define LED_PIN 3
+// LED pins for strips
+#define LED_PIN_A 3
+#define LED_PIN_B 4
+#define LED_PIN_C 5
 
 // maximum birghtness the LEDs can shine at.
-#define MAX_BRIGHTNESS 50
+#define MAX_BRIGHTNESS 25
 
-// maximum voltage FastLED will draw. Keeps power draw low.
-#define MAX_VOLTS 100
+// maximum voltage FastLED will draw. More control over max brightness
+#define MAX_VOLTS 50
 
-// how long should each pattern runs for
-// Seconds
-#define PATTERN_LENGTH  20
+// how long should each pattern runs for in seconds
+#define PATTERN_LENGTH  60
 
-// number of LEDs
+// number of LEDs per strip.
 #define NUM_LEDS 60
 
 // used for making patterns symetrical. Since the 0th pixel on my LED strip wasn't
@@ -28,6 +29,9 @@
 // how fast should the delay increase or decrease during pattern switches
 // a smaller number means the delay will drift faster.
 #define DELAY_DRIFT 1000
+
+// Enable the ChaosEngine Glitching Effects
+#define CONFIG_GLITCHING_ENABLED 1
 
 /**************************
   Avoid modifying these unless you know what it will effect.

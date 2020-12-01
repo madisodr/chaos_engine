@@ -80,7 +80,7 @@ void Pacifica::AddLayer(CRGB* leds, uint16_t cistart, uint16_t wavescale, uint8_
             uint8_t sindex8 = scale16( sindex16, 240);
 
             uint8_t hue = constrain(sindex8, Pattern::GetGlobalHue(), Pattern::GetGlobalHue() + 32);
-            leds[i] += CHSV(hue, 255, bri);
+            leds[i] = wheel(hue);
       }
 }
 
