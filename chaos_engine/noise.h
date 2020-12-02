@@ -16,7 +16,7 @@
 class Noise : public Pattern
 {
     public:
-        Noise(uint16_t _time, uint16_t _delay);
+        Noise(uint16_t _delay);
         ~Noise();
 
         void Generate(CRGB* arr);
@@ -45,7 +45,7 @@ class Noise : public Pattern
         uint16_t m_x;
 };
 
-Noise::Noise(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
+Noise::Noise(uint16_t _delay) : Pattern(_delay)
 {
     m_speed = NOISE_SPEED;
     m_scale = NOISE_SCALE;

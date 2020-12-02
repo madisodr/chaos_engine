@@ -4,7 +4,7 @@
 #include <FastLED.h>
 #include "config.h"
 
-#define MAX_PIXELS 5
+#define MAX_PIXELS 10
 
 class Pixel
 {
@@ -34,7 +34,7 @@ void Pixel::Update()
 class MovingPixels : public Pattern
 {
     public:
-        MovingPixels(uint16_t _time, uint16_t _delay);
+        MovingPixels(uint16_t _delay);
         ~MovingPixels();
 
         void Generate(CRGB* arr);
@@ -46,7 +46,7 @@ class MovingPixels : public Pattern
         Pixel* m_pixels[MAX_PIXELS] ;
 };
 
-MovingPixels::MovingPixels(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
+MovingPixels::MovingPixels(uint16_t _delay) : Pattern(_delay)
 {
     m_pixel_freq = 10; // 10%
     for (int i = 0; i < MAX_PIXELS; i++) {

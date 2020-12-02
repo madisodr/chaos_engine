@@ -9,7 +9,7 @@
 class Pacifica : public Pattern
 {
     public:
-        Pacifica(uint16_t _time, uint16_t _delay);
+        Pacifica(uint16_t _delay);
         ~Pacifica();
 
         void Generate(CRGB* arr);
@@ -21,7 +21,7 @@ class Pacifica : public Pattern
 
 };
 
-Pacifica::Pacifica(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay) {
+Pacifica::Pacifica(uint16_t _delay) : Pattern(_delay) {
 }
 
 Pacifica::~Pacifica() {}

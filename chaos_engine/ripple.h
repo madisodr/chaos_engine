@@ -9,7 +9,7 @@
 class Ripple : public Pattern
 {
     public:
-        Ripple(uint16_t _time, uint16_t _delay);
+        Ripple(uint16_t _delay);
         ~Ripple();
 
         void Generate(CRGB* arr);
@@ -21,7 +21,7 @@ class Ripple : public Pattern
         float m_fade_rate;
 };
 
-Ripple::Ripple(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
+Ripple::Ripple(uint16_t _delay) : Pattern(_delay)
 {
     m_center = random(NUM_LEDS);
     m_step = -1;
@@ -53,8 +53,8 @@ void Ripple::Generate(CRGB* arr)
     } else { 
         if (m_step < m_max_steps) {
             float bri = pow(m_fade_rate, m_step) * MAX_BRIGHTNESS;
-            arr[(m_center + m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCRGB().subtractFromRGB(bri); //Pattern::GetGlobalCHSV(bri); // wheel(m_color)
-            arr[(m_center - m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCRGB().subtractFromRGB(bri);
+            arr[(m_center + m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCRGB().subtractFromRGB(255 - bri); //Pattern::GetGlobalCHSV(bri); // wheel(m_color)
+            arr[(m_center - m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCRGB().subtractFromRGB(255 - bri);
     
             arr[(m_center + (NUM_LEDS / random(4)) + m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCRGB().subtractFromRGB(bri); 
             arr[(m_center + (NUM_LEDS / random(4)) - m_step + NUM_LEDS) % NUM_LEDS] = Pattern::GetGlobalCRGB().subtractFromRGB(bri); 

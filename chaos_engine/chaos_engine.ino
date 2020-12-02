@@ -30,8 +30,8 @@ void setup()
     //chaos_engine->RegisterPattern(ChaosEngine::DOUBLEMARQEE);
     chaos_engine->RegisterPattern(ChaosEngine::CONFETTI);
     chaos_engine->RegisterPattern(ChaosEngine::PIXELS);
-    chaos_engine->RegisterPattern(ChaosEngine::PACIFICA); 
-    chaos_engine->RegisterPattern(ChaosEngine::NOISE);
+    //chaos_engine->RegisterPattern(ChaosEngine::PACIFICA); 
+    //chaos_engine->RegisterPattern(ChaosEngine::NOISE);
     
     chaos_engine->Start();
 }

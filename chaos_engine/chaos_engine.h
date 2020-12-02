@@ -1,6 +1,5 @@
 #include <Vector.h>
-
- #include <FastLED.h>
+#include <FastLED.h>
 
 #include "pattern.h"
 #include "confetti.h"
@@ -62,19 +61,15 @@ ChaosEngine::ChaosEngine()
     m_patterns.setStorage(pattern_storage);
     
     if (CONFIG_GLITCHING_ENABLED) {
-        m_glitching_enabled = true;
+        m_glitching_enabled = true;        
+        ResetGlitch();
     }
-        
-    m_is_glitching = false;
-    m_next_glitch = random8(100);
-    m_glitch_frames = random8(1, 10);
-    m_frame = 0;
 }
 
 void ChaosEngine::Start()
 {   
-    // m_curr_pattern = m_patterns[random(m_patterns.size())];
-    m_curr_pattern = m_patterns[0];
+    // m_curr_pattern = m_patterns[random(m_patterns.size())]; // Randomly pick the first pattern
+    m_curr_pattern = m_patterns[0]; // Use the first pattern in our list. useful for debug purposes 
     
     m_total_delay = m_curr_pattern->GetDelay();
     SetupNextPattern();
@@ -151,25 +146,25 @@ void ChaosEngine::RegisterPattern(const uint8_t pattern_id)
 
     switch (pattern_id) {
         case HELIOS:
-            p = new Helios(PATTERN_LENGTH,30);
+            p = new Helios(40);
             break;
         case RIPPLE:
-            p = new Ripple(PATTERN_LENGTH,70);
+            p = new Ripple(70);
             break;
         case PACIFICA:
-            p = new Pacifica(PATTERN_LENGTH, 50);
+            p = new Pacifica(50);
             break;
         case CONFETTI:
-            p = new Confetti(PATTERN_LENGTH,60);
+            p = new Confetti(60);
             break;
         case PIXELS:
-            p = new MovingPixels(PATTERN_LENGTH, 70);
+            p = new MovingPixels(70);
             break;
         case NOISE:
-            p = new Noise(PATTERN_LENGTH, 50);
+            p = new Noise(50);
             break;
         case DOUBLEMARQEE:
-            p = new DoubleMarqee(PATTERN_LENGTH, 50);
+            p = new DoubleMarqee(50);
             break;
     }
 
@@ -192,9 +187,10 @@ Pattern* ChaosEngine::GetRunningPattern()
 
 void ChaosEngine::ResetGlitch()
 {
-    m_next_glitch = m_frame + random(60);
-    m_glitch_frames = random(40);
     m_is_glitching = false;
+    m_next_glitch = random(60);
+    m_glitch_frames = random8(1, 40);
+    m_frame = 0;
 }
 
 // Random strip flicker
@@ -205,7 +201,7 @@ void ChaosEngine::Glitch(CRGB* leds)
     }
 
     if (m_is_glitching) {
-        int shift = random(32);
+        int shift = random(16);
         if (m_frame >= m_next_glitch && m_frame < m_next_glitch + m_glitch_frames) {
             int start = random(NUM_LEDS); // * m_glitchStrip;
             int led_count = random(NUM_LEDS / 2);

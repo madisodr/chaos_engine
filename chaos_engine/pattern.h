@@ -7,7 +7,7 @@
 class Pattern
 {
     public:
-        Pattern(uint16_t _time, uint16_t _delay);
+        Pattern(uint16_t _delay);
         ~Pattern();
 
         virtual void Generate(CRGB* arr);
@@ -33,7 +33,7 @@ class Pattern
 
 uint8_t Pattern::s_hue;
 
-Pattern::Pattern(uint16_t _time, uint16_t _delay) : m_time(_time), m_delay(_delay), m_reverse(false) {}
+Pattern::Pattern(uint16_t _delay) : m_time(PATTERN_LENGTH), m_delay(_delay), m_reverse(false) {}
 Pattern::~Pattern() {}
 
 uint16_t Pattern::GetDelay() const
@@ -43,7 +43,7 @@ uint16_t Pattern::GetDelay() const
 
 uint16_t Pattern::GetTime() const
 {
-    return m_time;
+    return PATTERN_LENGTH;
 }
 
 void Pattern::UpdateGlobalHue()

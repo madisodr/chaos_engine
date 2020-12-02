@@ -6,7 +6,7 @@
 class Helios : public Pattern
 {
     public:
-        Helios(uint16_t _time, uint16_t _delay);
+        Helios(uint16_t _delay);
         ~Helios();
 
         void Generate(CRGB* arr);
@@ -18,7 +18,7 @@ class Helios : public Pattern
         bool reverse_buffer[NUM_LEDS];
 };
 
-Helios::Helios(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
+Helios::Helios(uint16_t _delay) : Pattern(_delay)
 {
     offset = 1;
     CreateHeliosBuffer(forward_buffer);
