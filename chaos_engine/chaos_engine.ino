@@ -1,116 +1,56 @@
  #include <FastLED.h>
  
 #include "config.h"
+#include "chaos_engine.h"
 
 #include "pattern.h"
-#include "playlist.h"
 
-#include "confetti.h"
-#include "noise.h"
-#include "ripple.h"
-#include "moving_pixels.h"
-#include "double_marqee.h"
-#include "helios.h"
-#include "pacifica.h"
-
-Pattern* pattern_list[] = {
-    //new Pacifica(PATTERN_LENGTH, 50),
-    //new Helios(PATTERN_LENGTH, 30),
-    //new Ripple(PATTERN_LENGTH, 70),
-    //new Confetti(PATTERN_LENGTH,60),
-    //new MovingPixels(PATTERN_LENGTH, 70),
-    //new Noise(PATTERN_LENGTH, 50),
-    new DoubleMarqee(PATTERN_LENGTH, 50),
-};
-
-Playlist* playlist;
+ChaosEngine* chaos_engine;
 
 // The leds
-CRGB leds[NUM_LEDS];
-CRGB staging[NUM_LEDS];
-
-uint16_t start_blending;
+CRGB leds_A[NUM_LEDS];
+CRGB leds_B[NUM_LEDS];
+CRGB leds_C[NUM_LEDS];
 
 /* setup */
 void setup()
 {
-    LEDS.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
-    randomSeed(analogRead(0));
+    LEDS.addLeds<WS2812B, LED_PIN_A, GRB>(leds_A, NUM_LEDS);
+    LEDS.addLeds<WS2812B, LED_PIN_B, GRB>(leds_B, NUM_LEDS);
+    LEDS.addLeds<WS2812B, LED_PIN_C, GRB>(leds_C, NUM_LEDS);
     
-    Pattern::SetGlobalHue(random8(255));
-
+    randomSeed(millis() + analogRead(0));
+    
     // Set the maximum power the LEDs can pull
     FastLED.setMaxPowerInVoltsAndMilliamps(5, MAX_VOLTS);
+    chaos_engine = new ChaosEngine();
     
-    playlist = new Playlist(pattern_list, ARRAY_SIZE(pattern_list));
-    playlist->SetupNextPattern(true);
-    playlist->SetTotalDelay(playlist->GetCurrent()->GetDelay());
-
-    Pattern::blend_amount = 0.0;
-    start_blending = millis() + (playlist->GetCurrent()->GetTime() * BLEND_TIME_MULTIPLIER);
-    Pattern::blending = false;
+    chaos_engine->RegisterPattern(ChaosEngine::HELIOS);
+    chaos_engine->RegisterPattern(ChaosEngine::RIPPLE);
+    //chaos_engine->RegisterPattern(ChaosEngine::DOUBLEMARQEE);
+    chaos_engine->RegisterPattern(ChaosEngine::CONFETTI);
+    chaos_engine->RegisterPattern(ChaosEngine::PIXELS);
+    //chaos_engine->RegisterPattern(ChaosEngine::PACIFICA); 
+    //chaos_engine->RegisterPattern(ChaosEngine::NOISE);
+    
+    chaos_engine->Start();
 }
 
 /* main loop */
 void loop()
 {
-    Pattern* running_pattern = playlist->GetCurrent();
-    Pattern* next_pattern = playlist->GetNext();
     // generate the current pattern
-    running_pattern->Generate(leds); 
+    chaos_engine->GetRunningPattern()->Generate(leds_A); 
+    chaos_engine->Update(leds_A);
 
-    EVERY_N_MILLISECONDS(500) {
-        Pattern::UpdateGlobalHue();
-    }
-
-    // if the timer start_blending has elapsed, flip the flag
-    if (millis() >= start_blending) {
-        Pattern::blending = true;
-    }
-
-    if (Pattern::blending && next_pattern != NULL) {
-        // generate and blend the next pattern into the original
-        next_pattern->Generate(staging);
-        blend(leds, staging, leds, NUM_LEDS, Pattern::blend_amount);
-
-        // Adjust the blend amount of the second pattern into the first.
-        EVERY_N_MILLISECONDS(int((running_pattern->GetTime() * BLEND_TIME_MULTIPLIER) / 255)) {
-            if (Pattern::blend_amount < 255) {
-                Pattern::blend_amount += 1;
-            }
-        }
-
-        // delay drift so the delay between patterns changes over smoothly
-        EVERY_N_MILLISECONDS(DELAY_DRIFT) {
-            int total_delay = playlist->GetTotalDelay();
-            if (total_delay < next_pattern->GetDelay()) {
-                playlist->SetTotalDelay(total_delay + 1);
-            } else if (total_delay > next_pattern->GetDelay()) {
-                playlist->SetTotalDelay(total_delay - 1);
-            }
-        }
-    }
+    uint8_t index_offset_b = random(10, 25);
+    uint8_t index_offset_c = random(30, 45);
     
-    //Pattern::Glitch(leds);
+    for (int i = 0; i < NUM_LEDS; i++) {
+        leds_B[i] = leds_A[(i + index_offset_b) % NUM_LEDS];
+        leds_C[i] = leds_A[(i + index_offset_c) % NUM_LEDS];
+    }
     
     FastLED.show();
-    FastLED.delay(playlist->GetTotalDelay());
-  
-    EVERY_N_SECONDS_I(timer, running_pattern->GetTime()) {
-        // reset blending for new pattern
-        start_blending = millis() + (running_pattern->GetTime() * BLEND_TIME_MULTIPLIER);
-        Pattern::blend_amount = 0;
-        Pattern::blending = false;
-
-        playlist->SetupNextPattern(true);
-
-        running_pattern = next_pattern;
-        playlist->SetCurrentPattern(next_pattern);
-
-        next_pattern = playlist->GetNext();
-        next_pattern->Reset();
-
-        // Update timer period to new pattern's length
-        timer.setPeriod(running_pattern->GetTime());
-    }
+    FastLED.delay(chaos_engine->GetTotalDelay());
 }

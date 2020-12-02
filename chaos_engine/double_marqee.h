@@ -9,7 +9,7 @@
 class DoubleMarqee : public Pattern
 {
     public:
-        DoubleMarqee(uint16_t _time, uint16_t _delay);
+        DoubleMarqee(uint16_t _delay);
         ~DoubleMarqee();
 
         void Generate(CRGB* arr);
@@ -19,7 +19,7 @@ class DoubleMarqee : public Pattern
         uint8_t m_num_leds;
 };
 
-DoubleMarqee::DoubleMarqee(uint16_t _time, uint16_t _delay) : Pattern(_time, _delay)
+DoubleMarqee::DoubleMarqee(uint16_t _delay) : Pattern(_delay)
 {
     m_hue = 0;
     m_num_leds = 0;
@@ -50,19 +50,19 @@ void DoubleMarqee::Generate(CRGB* arr)
             color = wheel(((i * 256 / (STRIP_LENGTH)) + m_hue) & 255);
         }
 
-        uint8_t l_idx = modulo(LEFT_TOP - i, NUM_LEDS);
+        uint8_t l_idx = modulo(STRIP_LENGTH - i, NUM_LEDS);
         arr[l_idx] = color;
 
-        uint8_t r_idx = modulo(RIGHT_TOP + i, NUM_LEDS);
+        uint8_t r_idx = modulo(STRIP_LENGTH + i, NUM_LEDS);
         arr[r_idx] = color;
-    }
-
-    EVERY_N_MILLISECONDS(100) {
-        m_num_leds += 1;
     }
 
     if (m_num_leds >= NUM_LEDS) {
         m_num_leds = NUM_LEDS;
+    } else {
+        EVERY_N_MILLISECONDS(100) {
+            m_num_leds += 1;
+        }
     }
 }
 

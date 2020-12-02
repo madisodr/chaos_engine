@@ -25,7 +25,7 @@ CRGB wheel(byte wheel_pos)
 }
 
 /* wraps x around mod in both directions */
-inline int modulo(int x, const int mod)
+int modulo(const int x, const int mod)
 {
     if (x < 0)
         return mod - abs(x);
@@ -36,7 +36,7 @@ inline int modulo(int x, const int mod)
 }
 
 // return a random double between 0.0 and 1.0    
-float RandomFloat() 
+float random_float() 
 {   
     return (float) (random(1,101) / (float) 100.0); 
 }
