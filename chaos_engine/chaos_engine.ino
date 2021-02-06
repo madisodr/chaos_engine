@@ -1,9 +1,7 @@
- #include <FastLED.h>
+#include <FastLED.h>
  
 #include "config.h"
 #include "chaos_engine.h"
-
-#include "pattern.h"
 
 ChaosEngine* chaos_engine;
 
@@ -11,6 +9,9 @@ ChaosEngine* chaos_engine;
 CRGB leds_A[NUM_LEDS];
 CRGB leds_B[NUM_LEDS];
 CRGB leds_C[NUM_LEDS];
+
+uint8_t index_offset_b = 17;
+uint8_t index_offset_c = 34;
 
 /* setup */
 void setup()
@@ -26,13 +27,15 @@ void setup()
     chaos_engine = new ChaosEngine();
     
     chaos_engine->RegisterPattern(ChaosEngine::HELIOS);
-    chaos_engine->RegisterPattern(ChaosEngine::RIPPLE);
-    //chaos_engine->RegisterPattern(ChaosEngine::DOUBLEMARQEE);
-    chaos_engine->RegisterPattern(ChaosEngine::CONFETTI);
     chaos_engine->RegisterPattern(ChaosEngine::PIXELS);
-    //chaos_engine->RegisterPattern(ChaosEngine::PACIFICA); 
-    //chaos_engine->RegisterPattern(ChaosEngine::NOISE);
+    chaos_engine->RegisterPattern(ChaosEngine::RIPPLE);
+    chaos_engine->RegisterPattern(ChaosEngine::CONFETTI);
     
+    /*
+    chaos_engine->RegisterPattern(ChaosEngine::DOUBLEMARQEE);
+    chaos_engine->RegisterPattern(ChaosEngine::PACIFICA); 
+    chaos_engine->RegisterPattern(ChaosEngine::NOISE);
+    */
     chaos_engine->Start();
 }
 
@@ -43,8 +46,10 @@ void loop()
     chaos_engine->GetRunningPattern()->Generate(leds_A); 
     chaos_engine->Update(leds_A);
 
-    uint8_t index_offset_b = random(10, 25);
-    uint8_t index_offset_c = random(30, 45);
+    EVERY_N_MILLISECONDS(5000) {
+        index_offset_b = random(35, 50);
+        index_offset_c = random(10, 25);
+    }
     
     for (int i = 0; i < NUM_LEDS; i++) {
         leds_B[i] = leds_A[(i + index_offset_b) % NUM_LEDS];
@@ -52,5 +57,5 @@ void loop()
     }
     
     FastLED.show();
-    FastLED.delay(chaos_engine->GetTotalDelay());
+    FastLED.delay(10);
 }

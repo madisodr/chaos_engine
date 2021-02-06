@@ -22,6 +22,8 @@ class Pattern
         static void SetGlobalHue(uint8_t _hue);
         static CHSV GetGlobalCHSV(uint8_t brightness, uint8_t saturation, uint8_t shift);
         static CRGB GetGlobalCRGB(uint8_t shift);
+
+        static void GenerateNewPalette();
     protected:
         void Breath(float _speed);
         bool m_reverse;
@@ -64,7 +66,7 @@ CHSV Pattern::GetGlobalCHSV(uint8_t brightness = MAX_BRIGHTNESS, uint8_t saturat
 
 CRGB Pattern::GetGlobalCRGB(uint8_t shift = 0)
 {
-    return wheel(s_hue + shift);
+    return wheel((s_hue + shift) % 255);
 }
 
 void Pattern::SetGlobalHue(uint8_t _hue)
@@ -83,5 +85,6 @@ inline void Pattern::ToggleReverse()
 {
     m_reverse ^= true;
 }
+
 
 #endif // PATTERN_H

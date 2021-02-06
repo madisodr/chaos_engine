@@ -25,7 +25,7 @@ Ripple::Ripple(uint16_t _delay) : Pattern(_delay)
 {
     m_center = random(NUM_LEDS);
     m_step = -1;
-    m_max_steps = 15;
+    m_max_steps = 10;
     m_fade_rate = 0.9;
 }
 
@@ -35,7 +35,7 @@ void Ripple::Reset()
 {
     m_center = random(NUM_LEDS);
     m_step = -1;
-    m_max_steps = 15;    
+    m_max_steps = 10;    
 }
 
 void Ripple::Generate(CRGB* arr)

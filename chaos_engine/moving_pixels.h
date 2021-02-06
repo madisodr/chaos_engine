@@ -4,24 +4,26 @@
 #include <FastLED.h>
 #include "config.h"
 
-#define MAX_PIXELS 10
+#define MAX_PIXELS 8
 
 class Pixel
 {
     public:
-        Pixel(bool reverse);
+        Pixel(bool reverse, bool use_alt_color);
         ~Pixel();
         void Update();
         bool m_reverse;
         bool m_is_running;
         uint8_t m_pos;
+        bool m_alt_color;
 };
 
-Pixel::Pixel(bool reverse)
+Pixel::Pixel(bool reverse, bool use_alt_color)
 {
     m_reverse = reverse;
     m_pos = m_reverse ? NUM_LEDS - 1 : 0;
     m_is_running = false;
+    m_alt_color = use_alt_color;
 }
 
 Pixel::~Pixel()  {}
@@ -50,7 +52,7 @@ MovingPixels::MovingPixels(uint16_t _delay) : Pattern(_delay)
 {
     m_pixel_freq = 10; // 10%
     for (int i = 0; i < MAX_PIXELS; i++) {
-        m_pixels[i] = new Pixel(false);
+        m_pixels[i] = new Pixel(random(2), (i % 2));
     }
 }
 
@@ -97,7 +99,11 @@ void MovingPixels::Generate(CRGB* leds)
         if (!p->m_is_running) { 
             continue;
         } else {
-            leds[p->m_pos] = Pattern::GetGlobalCRGB();
+            if (p->m_reverse == true) {
+                leds[p->m_pos] = Pattern::GetGlobalCRGB(85);
+            } else {
+                leds[p->m_pos] = Pattern::GetGlobalCRGB();
+            }
         }
     }
 }

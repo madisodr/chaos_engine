@@ -6,9 +6,9 @@
 #define LED_PIN_B 4
 #define LED_PIN_C 5
 
-const int MAX_BRIGHTNESS = 50; // maximum birghtness the LEDs can shine at.
-const int MAX_VOLTS = 150; // max volts FastLED will draw. better power control
-const int PATTERN_LENGTH = 60; // how long should each pattern runs (SECONDS)
+const int MAX_BRIGHTNESS = 255; // maximum birghtness the LEDs can shine at.
+const int MAX_VOLTS = 500; // max volts FastLED will draw. better power control
+const int PATTERN_LENGTH = 20; // how long should each pattern runs (SECONDS)
 const int NUM_LEDS = 60; // number of LEDs per strip
 const int DELAY_DRIFT = 1000; // pattern delay interpolation (MILLISECONDS)
 const bool CONFIG_GLITCHING_ENABLED = true; // enables the glitching effects

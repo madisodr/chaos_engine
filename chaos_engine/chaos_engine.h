@@ -12,6 +12,20 @@
 
 const int MAX_PATTERN_COUNT = 10;
 
+class LightStrip
+{
+    public:
+        LightStrip(CRGB* _leds, uint8_t _pin) : m_leds(_leds), m_pin(_pin)
+        {
+            
+        }
+        ~LightStrip();
+
+    private:
+        CRGB* m_leds;
+        uint8_t m_pin;
+};
+
 class ChaosEngine
 {
   public:
@@ -38,6 +52,7 @@ class ChaosEngine
     uint16_t m_start_blending_timer; // when to start blending to the next pattern
     bool m_is_blending;
     float m_blend_amount;
+    const float m_blend_step = 0.5;
     
     Pattern* pattern_storage[MAX_PATTERN_COUNT];
     Vector<Pattern*> m_patterns;
@@ -59,7 +74,8 @@ ChaosEngine::ChaosEngine()
     m_is_blending = false;
     m_blend_amount = 0.0;
     m_patterns.setStorage(pattern_storage);
-    
+     m_glitching_enabled = false;
+     
     if (CONFIG_GLITCHING_ENABLED) {
         m_glitching_enabled = true;        
         ResetGlitch();
@@ -90,12 +106,13 @@ void ChaosEngine::Update(CRGB* leds)
     if (m_is_blending && m_next_pattern != NULL) {
         // generate and blend the next pattern into the original
         m_next_pattern->Generate(m_blending_pattern);
+        
         blend(leds, m_blending_pattern, leds, NUM_LEDS, m_blend_amount);
 
         // Adjust the blend amount of the second pattern into the first.
         EVERY_N_MILLISECONDS(int((m_curr_pattern->GetTime() * BLEND_TIME_MULTIPLIER) / 255)) {
             if (m_blend_amount < 255) {
-                m_blend_amount++;
+                m_blend_amount += m_blend_step;
             }
         }
 
@@ -189,7 +206,7 @@ void ChaosEngine::ResetGlitch()
 {
     m_is_glitching = false;
     m_next_glitch = random(60);
-    m_glitch_frames = random8(1, 40);
+    m_glitch_frames = random8(30);
     m_frame = 0;
 }
 

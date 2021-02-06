@@ -43,12 +43,12 @@ void Helios::Generate(CRGB* leds)
         if (forward) {
             // int b = random(16);
             // color = Pattern::GetGlobalCRGB(b);
-            leds[i] = Pattern::GetGlobalCRGB(random(16));
+            leds[i] = Pattern::GetGlobalCRGB();
         }
 
         if (reverse) {
             // color = Pattern::GetGlobalCRGB(random(16));
-            leds[i] = Pattern::GetGlobalCRGB(random(16));
+            leds[i] = Pattern::GetGlobalCRGB(85);
         }
     }
 
@@ -60,7 +60,7 @@ void Helios::Reset() {}
 void Helios::CreateHeliosBuffer(bool* buffer)
 {
     uint8_t forwardOdds = 128;  // Chance on will flip to off. [0-255]
-    uint8_t reverseOdds = 32;
+    uint8_t reverseOdds = 16;
     bool flip = true;
     for (int i = 0; i < NUM_LEDS; i++) {
         buffer[i] = flip;
