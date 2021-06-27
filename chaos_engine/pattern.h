@@ -59,12 +59,12 @@ uint8_t Pattern::GetGlobalHue()
 
 CHSV Pattern::GetGlobalCHSV(uint8_t brightness = MAX_BRIGHTNESS, uint8_t saturation = 255, uint8_t shift = 0)
 {
-    return CHSV(s_hue + shift, 255, brightness);
+    return CHSV(GetGlobalHue() + shift, 255, brightness);
 }
 
 CRGB Pattern::GetGlobalCRGB(uint8_t shift = 0)
 {
-    return wheel(s_hue + shift);
+    return wheel(GetGlobalHue() + shift);
 }
 
 void Pattern::SetGlobalHue(uint8_t _hue)

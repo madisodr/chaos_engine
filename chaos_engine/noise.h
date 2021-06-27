@@ -7,7 +7,7 @@
 #include "pattern.h"
 #include "utils.h"
 
-#define NOISE_SPEED 40
+#define NOISE_SPEED 30
 #define NOISE_SCALE 70
 
 #define SPEED_STEP 2
@@ -104,7 +104,7 @@ void Noise::Generate(CRGB* leds)
             bri = dim8_raw(bri * 2);
         }
 
-        leds[i] = GetGlobalCRGB(random(64)); //CHSV(Pattern::GetGlobalHue() + random8(8), 255, bri);
+        leds[i] = GetGlobalCRGB(random(25)); //CHSV(Pattern::GetGlobalHue() + random8(8), 255, bri);
     }
 }
 

@@ -11,6 +11,12 @@ ChaosEngine* chaos_engine;
 CRGB leds_A[NUM_LEDS];
 CRGB leds_B[NUM_LEDS];
 CRGB leds_C[NUM_LEDS];
+int strip_offsets[NUM_LED_STRIPS];
+uint8_t index_offset_b = 0; //random(10, 25);
+uint8_t index_offset_c = 0; //random(30, 45);
+
+uint8_t PatternSet[] = {ChaosEngine::RIPPLE, ChaosEngine::PIXELS, ChaosEngine::DOUBLEMARQEE, ChaosEngine::CONFETTI, ChaosEngine::NOISE};
+//uint8_t PatternSet[] = {ChaosEngine::HELIOS, ChaosEngine::RIPPLE, ChaosEngine::PIXELS, ChaosEngine::DOUBLEMARQEE, ChaosEngine::CONFETTI, ChaosEngine::NOISE, ChaosEngine::PACIFICA};
 
 /* setup */
 void setup()
@@ -24,14 +30,10 @@ void setup()
     // Set the maximum power the LEDs can pull
     FastLED.setMaxPowerInVoltsAndMilliamps(5, MAX_VOLTS);
     chaos_engine = new ChaosEngine();
-    
-    chaos_engine->RegisterPattern(ChaosEngine::HELIOS);
-    chaos_engine->RegisterPattern(ChaosEngine::RIPPLE);
-    //chaos_engine->RegisterPattern(ChaosEngine::DOUBLEMARQEE);
-    chaos_engine->RegisterPattern(ChaosEngine::CONFETTI);
-    chaos_engine->RegisterPattern(ChaosEngine::PIXELS);
-    //chaos_engine->RegisterPattern(ChaosEngine::PACIFICA); 
-    //chaos_engine->RegisterPattern(ChaosEngine::NOISE);
+
+    for (int i = 0; i < ARRAY_SIZE(PatternSet); i++) {
+        chaos_engine->RegisterPattern(PatternSet[i]);
+    }
     
     chaos_engine->Start();
 }
@@ -43,13 +45,10 @@ void loop()
     chaos_engine->GetRunningPattern()->Generate(leds_A); 
     chaos_engine->Update(leds_A);
 
-    uint8_t index_offset_b = random(10, 25);
-    uint8_t index_offset_c = random(30, 45);
-    
     for (int i = 0; i < NUM_LEDS; i++) {
-        leds_B[i] = leds_A[(i + index_offset_b) % NUM_LEDS];
-        leds_C[i] = leds_A[(i + index_offset_c) % NUM_LEDS];
+        leds_B[i] = leds_A[i];
     }
+    
     
     FastLED.show();
     FastLED.delay(chaos_engine->GetTotalDelay());
